@@ -40,3 +40,8 @@ tasks {
     test { useJUnitPlatform() }
 
 }
+
+publishing.publications.register<MavenPublication>("maven") {
+    from(components["java"])
+//    artifact(sourceJar)
+}
