@@ -8,4 +8,3 @@
  */
 
 rootProject.name = "slurm.kts"
-include("lib")
