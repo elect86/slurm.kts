@@ -26,8 +26,21 @@ fun Partition(line: List<String>): Partition {
     var x = line[2].split('-')
     val day = if (x.size > 1) x[0] else ""
     x = x.getOrElse(1) { x[0] }.split(':')
-    val (hour, minute, second) = x
-    val timeLimit = Duration.parse("p${day}T${hour}h${minute}m${second}s")
+    var hour = 0
+    var min = 0
+    val sec = when(x.size) {
+        3 -> {
+            hour = x[0].toInt()
+            min = x[1].toInt()
+            x[2].toInt()
+        }
+        2 -> {
+            min = x[0].toInt()
+            x[1].toInt()
+        }
+        else -> x[0].toInt()
+    }
+    val timeLimit = Duration.parse("p${day}T${hour}h${min}m${sec}s")
     x = line[3].split('-')
     val (start, end) = x[0].toInt() to x.getOrElse(1) { x[0] }
     val jobSize = start..if (end == "infinite") Int.MAX_VALUE else end.toInt()
