@@ -59,7 +59,7 @@ fun Partition(line: List<String>): Partition {
 val partitions: List<Partition> by lazy {
     "sinfo -l"()
         .lines()
-        .drop(1) // titles
+        .drop(2) // date and titles
         .map { Partition(it.split(Regex("\\s+"))) }
         .toList()
 }
