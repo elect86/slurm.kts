@@ -120,7 +120,7 @@ operator fun String.invoke(): String {
 }
 
 fun main() {
-    sinfo { states(State.ALLOC) }
+    sinfo { states(State.alloc) }
 }
 
 inline fun sinfo(block: SinfoBuilder.() -> Unit) {
@@ -677,10 +677,10 @@ class FormatBuilder(val sinfo: Sinfo) {
 }
 
 enum class State {
-    ALLOC, ALLOCATED, CLOUD, COMP, COMPLETING, DOWN,
+    alloc, allocated, cloud, comp, completing, down,
 
     /** for node in DRAINING or DRAINED states */
-    DRAIN,
-    DRAINED, DRAINING, FAIL, FUTURE, FUTR, IDLE, MAINT, MIX, MIXED, NO_RESPOND, NPC, PERFCTRS, PLANNED, POWER_DOWN,
-    POWERING_DOWN, POWERED_DOWN, POWERING_UP, REBOOT_ISSUED, REBOOT_REQUESTED, RESV, RESERVED, UNK, UNKNOWN
+    drain,
+    drained, draining, fail, future, futr, idle, maint, mix, mixed, no_respond, npc, perfctrs, planned, power_down,
+    powering_down, powered_down, powering_up, reboot_issued, reboot_requested, resv, reserved, unk, unknown
 }
