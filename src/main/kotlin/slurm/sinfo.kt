@@ -40,7 +40,6 @@ fun Partition(line: List<String>): Partition {
         }
         else -> x[0].toInt()
     }
-    println("p${day}T${hour}h${min}m${sec}s")
     val timeLimit = Duration.parse("p${day}T${hour}h${min}m${sec}s")
     x = line[3].split('-')
     val (start, end) = x[0].toInt() to x.getOrElse(1) { x[0] }
@@ -61,6 +60,7 @@ val partitions: List<Partition> by lazy {
     "sinfo -l"()
         .lines()
         .drop(2) // date and titles
+        .filter { it.isNotEmpty() }
         .map { Partition(it.split(Regex("\\s+"))) }
         .toList()
 }
@@ -104,6 +104,7 @@ val nodelists: List<NodeList> by lazy {
     "sinfo -Nel"()
         .lines()
         .drop(2) // date and titles
+        .filter { it.isNotEmpty() }
         .map { NodeList(it.split(Regex("\\s+"))) }
         .toList()
 }
