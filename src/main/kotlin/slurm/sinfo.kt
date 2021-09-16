@@ -107,7 +107,11 @@ operator fun String.invoke(): String {
 }
 
 
-inline fun sinfo(block: SinfoBuilder.() -> Unit) = SinfoBuilder().block()
+inline fun sinfo(block: SinfoBuilder.() -> Unit) {
+    val sinfo = Sinfo()
+    SinfoBuilder(sinfo).block()
+    sinfo()
+}
 
 @SlurmMarker
 class Sinfo {

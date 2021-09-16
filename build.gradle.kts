@@ -20,7 +20,7 @@ plugins {
     `maven-publish`
 }
 
-version = "0.0.2"
+version = "0.0.3"
 group = "elect86"
 
 repositories {
