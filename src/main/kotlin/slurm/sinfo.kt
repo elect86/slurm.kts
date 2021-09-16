@@ -173,7 +173,7 @@ class Sinfo {
         if (states.isNotEmpty()) cmd += " -t ${states.joinToString(",")}"
         if (reservation) cmd += " -T"
         println("running`$cmd`")
-        cmd.toString().invoke()
+        println(cmd.toString().invoke())
     }
 }
 
