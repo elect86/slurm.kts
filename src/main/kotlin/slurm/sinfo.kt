@@ -40,6 +40,7 @@ fun Partition(line: List<String>): Partition {
         }
         else -> x[0].toInt()
     }
+    println("p${day}T${hour}h${min}m${sec}s")
     val timeLimit = Duration.parse("p${day}T${hour}h${min}m${sec}s")
     x = line[3].split('-')
     val (start, end) = x[0].toInt() to x.getOrElse(1) { x[0] }
