@@ -102,7 +102,7 @@ value class MB(val value: Int)
 val nodelists: List<NodeList> by lazy {
     "sinfo -Nel"()
         .lines()
-        .drop(1) // titles
+        .drop(2) // date and titles
         .map { NodeList(it.split(Regex("\\s+"))) }
         .toList()
 }
