@@ -155,3 +155,6 @@ open class Job(val id: Int)
 class JobTime(id: Int, val time: Minute) : Job(id)
 
 enum class Exclusive { otherRunningJobs, user, mcs }
+
+@DslMarker
+annotation class SlurmMarker

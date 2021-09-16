@@ -20,7 +20,8 @@ plugins {
     `maven-publish`
 }
 
-version = "0.0.1"
+version = "0.0.2"
+group = "elect86"
 
 repositories {
     // Use Maven Central for resolving dependencies.
