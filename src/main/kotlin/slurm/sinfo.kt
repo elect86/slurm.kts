@@ -24,7 +24,7 @@ fun Partition(line: List<String>): Partition {
     }
     val availability = line[1] == "up"
     var x = line[2].split('-')
-    val day = if (x.size > 1) x[0] else ""
+    val day = if (x.size > 1) "${x[0]}d" else ""
     x = x.getOrElse(1) { x[0] }.split(':')
     var hour = 0
     var min = 0
