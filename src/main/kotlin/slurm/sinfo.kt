@@ -25,7 +25,7 @@ fun Partition(line: List<String>): Partition {
     val availability = line[1] == "up"
     var x = line[2].split('-')
     val day = if (x.size > 1) x[0] else ""
-    x = x[1].split('-')
+    x = x.getOrElse(1) { x[0] }.split(':')
     val (hour, minute, second) = x
     val timeLimit = Duration.parse("p${day}T${hour}h${minute}m${second}s")
     x = line[3].split('-')
@@ -106,6 +106,9 @@ operator fun String.invoke(): String {
     return String(process.inputStream.readAllBytes())
 }
 
+fun main() {
+    sinfo { states(State.ALLOC) }
+}
 
 inline fun sinfo(block: SinfoBuilder.() -> Unit) {
     val sinfo = Sinfo()
