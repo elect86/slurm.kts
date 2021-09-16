@@ -172,6 +172,7 @@ class Sinfo {
         if (order.isNotEmpty()) cmd += " -S $order"
         if (states.isNotEmpty()) cmd += " -t ${states.joinToString(",")}"
         if (reservation) cmd += " -T"
+        println("running`$cmd`")
         cmd.toString().invoke()
     }
 }
