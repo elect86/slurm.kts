@@ -103,7 +103,22 @@ fun List<Partition>.print(head: Int = 10) {
                 if (p.default)
                     name += '*'
                 val availability = if (p.availability) "✅" else "❌"
-                val timelimit = p.timeLimit.toComponents { days, hours, min, sec, _ -> "$days-$hours:$min:$sec" }
+                val timelimit = p.timeLimit.toComponents { days, hours, min, sec, _ ->
+                    buildString {
+                        var something = false
+                        if (days != 0) {
+                            append("$days-")
+                            something = true
+                        }
+                        if (hours != 0 || something) {
+                            append("$hours:")
+                            something = true
+                        }
+                        if (min != 0 || something)
+                            append("$2d:".format(min))
+                        append("%2d".format(sec))
+                    }
+                }
                 val last = when (p.jobSize.last) {
                     Int.MAX_VALUE -> '\u221E'.toString()
                     else -> p.jobSize.last.toString()
