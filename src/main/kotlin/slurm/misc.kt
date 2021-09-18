@@ -89,7 +89,7 @@ val partitions: List<Partition> by lazy {
 val terminal = Terminal(width = 200)
 
 @ExperimentalTime
-fun List<Partition>.print(head: Int = 10) {
+fun List<Partition>.print(head: Int = size) {
     terminal.print(table {
         borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
         align = TextAlign.LEFT
