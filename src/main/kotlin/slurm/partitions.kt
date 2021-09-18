@@ -78,7 +78,7 @@ fun List<Partition>.print(head: Int = size) {
         align = TextAlign.LEFT
         outerBorder = false
         header {
-            row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Groups", "Nodes", "State", "NodeList")
+            row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Gr", "Nd", "State", "NodeList")
         }
         column(2) { align = TextAlign.RIGHT }
         column(6) { align = TextAlign.CENTER }
