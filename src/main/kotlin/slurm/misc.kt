@@ -1,5 +1,6 @@
 package slurm
 
+import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.time.Duration
@@ -11,11 +12,11 @@ operator fun StringBuilder.plus(char: Char): StringBuilder = append(char)
 
 @ExperimentalTime
 fun main() {
-//    val t = Terminal()
-//    t.println(table {
-//        header { row("CJK", "Emojis") }
-//        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
-//    })
+    //    val t = Terminal()
+    //    t.println(table {
+    //        header { row("CJK", "Emojis") }
+    //        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
+    //    })
     partitions.print()
 }
 
@@ -86,15 +87,17 @@ val partitions: List<Partition> by lazy {
 val terminal = Terminal()
 
 @ExperimentalTime
-fun List<Partition>.print(){
+fun List<Partition>.print() {
     terminal.print(table {
-        header { row("Partition", "Avail", "TimeLimit", "JobSize", "Root", "Oversubs", "Groups", "Nodes", "State", "NodeList") }
+        header {
+            row("Partition", "Avail", "TimeLimit", "JobSize", "Root", "Oversubs"/*, "Groups", "Nodes", "State", "NodeList"*/)
+        }
         body {
             for (p in this@print) {
                 var name = p.name
                 if (p.default)
                     name += '*'
-                val availability = if(p.availability) "✅" else "❌"
+                val availability = if (p.availability) "✅" else "❌"
                 val days = p.timeLimit.inWholeDays
                 val hours = p.timeLimit.inWholeHours
                 val min = p.timeLimit.inWholeMinutes
@@ -106,8 +109,8 @@ fun List<Partition>.print(){
                 }
                 val jobSize = "${p.jobSize.first}-$last"
                 val root = if (p.root) "yes" else "no"
-                val oversubs = if(p.oversubs)"yes" else "no"
-                row(name, availability, timelimit, jobSize, root, oversubs, p.groups, p.nodes, p.state, p.nodeList.joinToString(","))
+                val oversubs = if (p.oversubs) "yes" else "no"
+                row(name, availability, timelimit, jobSize, root, oversubs/*, p.groups, p.nodes, p.state, p.nodeList.joinToString(",")*/)
             }
         }
     })
