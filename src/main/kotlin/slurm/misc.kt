@@ -115,8 +115,8 @@ fun List<Partition>.print(head: Int = 10) {
                             something = true
                         }
                         if (min != 0 || something)
-                            append("%2d:".format(min))
-                        append("%2d".format(sec))
+                            append("%02d:".format(min))
+                        append("%02d".format(sec))
                     }
                 }
                 val last = when (p.jobSize.last) {
