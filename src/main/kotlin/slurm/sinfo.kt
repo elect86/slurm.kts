@@ -1,129 +1,5 @@
 package slurm
 
-import java.lang.StringBuilder
-import java.time.Duration
-
-data class Partition(
-    val name: String,
-    val default: Boolean,
-    val availability: Boolean,
-    val timeLimit: Duration,
-    val jobSize: IntRange,
-    val root: Boolean,
-    val oversubs: Boolean,
-    val groups: String,
-    val nodes: Int,
-    val state: State,
-    val nodeList: List<String>)
-
-fun Partition(line: List<String>): Partition {
-    var name = line[0]
-    val default = when {
-        name.last() == '*' -> true.also { name = name.dropLast(1) }
-        else -> false
-    }
-    val availability = line[1] == "up"
-    var x = line[2].split('-')
-    val day = if (x.size > 1) "${x[0]}d" else ""
-    x = x.getOrElse(1) { x[0] }.split(':')
-    var hour = 0
-    var min = 0
-    val sec = when(x.size) {
-        3 -> {
-            hour = x[0].toInt()
-            min = x[1].toInt()
-            x[2].toInt()
-        }
-        2 -> {
-            min = x[0].toInt()
-            x[1].toInt()
-        }
-        else -> x[0].toInt()
-    }
-    val timeLimit = Duration.parse("p${day}T${hour}h${min}m${sec}s")
-    x = line[3].split('-')
-    val (start, end) = x[0].toInt() to x.getOrElse(1) { x[0] }
-    val jobSize = start..if (end == "infinite") Int.MAX_VALUE else end.toInt()
-    val root = line[4].equals("yes", ignoreCase = true)
-    val oversubs = line[5].equals("yes", ignoreCase = true)
-    val groups = line[6]
-    val nodes = line[7].toInt()
-    var y = line[8]
-    if (y.last() == '*')
-        y = y.dropLast(1)
-    val state = State.valueOf(y)
-    val nodeList = line[9].split(Regex(",(?![^\\[]*[]])"))
-    return Partition(name, default, availability, timeLimit, jobSize, root, oversubs, groups, nodes, state, nodeList)
-}
-
-val partitions: List<Partition> by lazy {
-    "sinfo -l"()
-        .lines()
-        .drop(2) // date and titles
-        .filter { it.isNotEmpty() }
-        .map { Partition(it.split(Regex("\\s+"))) }
-        .toList()
-}
-//val sinfo: String by lazy { "sinfo"() }
-
-data class NodeList(
-    val name: String,
-    val nodes: Int,
-    val partition: String,
-    val state: State,
-    val cpus: Int,
-    val socketCoreThread: String,
-    val memory: MB,
-    val tmpDisk: Int,
-    val weight: Int,
-    val availFe: String,
-    val reason: String)
-
-fun NodeList(line: List<String>): NodeList {
-    val name = line[0]
-    val nodes = line[1].toInt()
-    val partition = line[2]
-    var x = line[3]
-    if (x.last() == '*')
-        x = x.dropLast(1)
-    val state = State.valueOf(x)
-    val cpus = line[4].toInt()
-    val sct = line[5]
-    val memory = MB(line[6].toInt())
-    val tmpDisk = line[7].toInt()
-    val weight = line[8].toInt()
-    val availFe = line[9]
-    val reason = line[10]
-    return NodeList(name, nodes, partition, state, cpus, sct, memory, tmpDisk, weight, availFe, reason)
-}
-
-@JvmInline
-value class MB(val value: Int)
-
-val nodelists: List<NodeList> by lazy {
-    "sinfo -Nel"()
-        .lines()
-        .drop(2) // date and titles
-        .filter { it.isNotEmpty() }
-        .map { NodeList(it.split(Regex("\\s+"))) }
-        .toList()
-}
-
-//val nodes
-
-operator fun String.invoke(): String {
-    val process = ProcessBuilder(*split(" ").toTypedArray())
-        //        .directory(workingDir)
-        //        .redirectOutput(Redirect.INHERIT)
-        //        .redirectError(Redirect.INHERIT)
-        .start()
-    //        .waitFor(60, TimeUnit.MINUTES)
-    return String(process.inputStream.readAllBytes())
-}
-
-fun main() {
-    sinfo { states(State.alloc) }
-}
 
 inline fun sinfo(block: SinfoBuilder.() -> Unit) {
     val sinfo = Sinfo()
@@ -139,9 +15,7 @@ class Sinfo {
     var federation = false
     var noHeader = false
     var help = false
-    var hide = false
     var iterate = Second(0)
-    var json = false
     var local = false
     var long = false
     val clusters = ArrayList<String>()
@@ -156,42 +30,209 @@ class Sinfo {
     var order = ""
     val states = ArrayList<State>()
     var reservation = false
-
-    //    var usage = false
+    var usage = false
     var verbose = false
     var version = false
-    var yaml = false
 
     operator fun invoke() {
-        var cmd = StringBuilder("sinfo")
-        if (all) cmd += " -a"
-        if (dead) cmd += " -d"
-        if (exact) cmd += " -e"
-        if (federation) cmd += " --federation"
-        if (noHeader) cmd += " -h"
-        if (help) cmd += " --help"
-        if (hide) cmd += " --hide"
-        if (iterate != 0.s) cmd += " -i ${iterate.value}"
-        if (json) cmd += " --json"
-        if (local) cmd += " --local"
-        if (long) cmd += " -l"
-        if (clusters.isNotEmpty()) cmd += " -M ${clusters.joinToString(",")}"
-        if (nodes.isNotEmpty()) cmd += " -n ${nodes.joinToString(",")}"
-        if (dontConvert) cmd += " --noconvert"
-        if (node) cmd += " -N"
-        if (format.isNotEmpty()) cmd += when {
-            format.any { '%' in it } -> " -o \"${format.joinToString(" ")}\""
-            else -> " -O \"${format.joinToString(",")}\""
+        val cmd = buildString {
+            append("sinfo")
+            if (all) append(" -a")
+            if (dead) append(" -d")
+            if (exact) append(" -e")
+            if (federation) append(" --federation")
+            if (noHeader) append(" -h")
+            if (help) append(" --help")
+            if (iterate != 0.s) append(" -i ${iterate.value}")
+            if (local) append(" --local")
+            if (long) append(" -l")
+            if (clusters.isNotEmpty()) append(" -M ${clusters.joinToString(",")}")
+            if (nodes.isNotEmpty()) append(" -n ${nodes.joinToString(",")}")
+            if (dontConvert) append(" --noconvert")
+            if (node) append(" -N")
+            if (format.isNotEmpty()) append(when {
+                                                '%' in format[0] -> " -o \"${format.joinToString(" ")}\""
+                                                else -> " -O \"${format.joinToString(",")}\""
+                                            })
+            if (partitions.isNotEmpty()) append(" -p ${partitions.joinToString(",")}")
+            if (responding) append(" -r")
+            if (listReasons) append(" -R")
+            if (summarize) append(" -s")
+            if (order.isNotEmpty()) append(" -S $order")
+            if (states.isNotEmpty()) append(" -t ${states.joinToString(",")}")
+            if (reservation) append(" -T")
         }
-        if (partitions.isNotEmpty()) cmd += " -p ${partitions.joinToString(",")}"
-        if (responding) cmd += " -r"
-        if (listReasons) cmd += " -R"
-        if (summarize) cmd += " -s"
-        if (order.isNotEmpty()) cmd += " -S $order"
-        if (states.isNotEmpty()) cmd += " -t ${states.joinToString(",")}"
-        if (reservation) cmd += " -T"
         println("running`$cmd`")
-        println(cmd.toString().invoke())
+        println(cmd.invoke())
+    }
+
+    @SlurmMarker
+    class Format(val type: Type) {
+        var size = 20
+        var rightJustified = false
+        var suffix = ""
+
+        enum class Type {
+            /** Print all fields available in the -o format for this data type with a vertical bar separating each field. */
+            All,
+
+            /** Prints the amount of allocated memory on a node. */
+            AllocMem,
+
+            /** Allowed allocating nodes. */
+            AllocNodes,
+
+            /** State/availability of a partition. */
+            Available,
+
+            /** Print the cluster name if running in a federation. */
+            Cluster,
+
+            /** Comment. (Arbitrary descriptive string) */
+            Comment,
+
+            /** Number of cores per socket. */
+            Cores,
+
+            /** Number of CPUs per node. */
+            CPUs,
+
+            /** CPU load of a node. */
+            CPUsLoad,
+
+            /** Number of CPUs by state in the format "allocated/idle/other/total". Do not use this with a node state option ("%t" or "%T") or the different node states will be placed on separate lines. */
+            CPUsState,
+
+            /** Default time for any job in the format "days-hours:minutes:seconds". */
+            DefaultTime,
+
+            /** Size of temporary disk space per node in megabytes. */
+            Disk,
+
+            /** Arbitray string on the node. */
+            Extra,
+
+            /** Features available on the nodes. Also see features_act. */
+            Features,
+
+            /** Features currently active on the nodes. Also see features. */
+            features_act,
+
+            /** Free memory of a node. */
+            FreeMem,
+
+            /** Generic resources (gres) associated with the nodes. */
+            Gres,
+
+            /** Generic resources (gres) currently in use on the nodes. */
+            GresUsed,
+
+            /** Groups which may use the nodes. */
+            Groups,
+
+            /** The max number of CPUs per node available to jobs in the partition. */
+            MaxCPUsPerNode,
+
+            /** Size of memory per node in megabytes. */
+            Memory,
+
+            /** List of node communication addresses. */
+            NodeAddr,
+
+            /** Number of nodes by state in the format "allocated/idle". Do not use this with a node state option ("%t" or "%T") or the different node states will be placed on separate lines. */
+            NodeAI,
+
+            /** Number of nodes by state in the format "allocated/idle/other/total". Do not use this with a node state option ("%t" or "%T") or the different node states will be placed on separate lines. */
+            NodeAIOT,
+
+            /** List of node hostnames. */
+            NodeHost,
+
+            /** List of node names. */
+            NodeList,
+
+            /** Number of nodes. */
+            Nodes,
+
+            /** Whether jobs may oversubscribe compute resources (e.g. CPUs). */
+            OverSubscribe,
+
+            /** Partition name followed by "*" for the default partition, also see %R. */
+            Partition,
+
+            /** Partition name, also see %P. */
+            PartitionName,
+
+            /** Node TCP port. */
+            Port,
+
+            /** Preemption mode. */
+            PreemptMode,
+
+            /** Partition factor used by priority/multifactor plugin in calculating job priority. */
+            PriorityJobFactor,
+
+            /** Partition scheduling tier priority. */
+            PriorityTier,
+
+            /** The reason a node is unavailable (down, drained, or draining states). */
+            Reason,
+
+            /** Only user root may initiate jobs, "yes" or "no". */
+            Root,
+
+            /** Maximum job size in nodes. */
+            Size,
+
+            /** Extended processor information: number of sockets, cores, threads (S:C:T) per node. */
+            SocketCoreThread,
+
+            /** Number of sockets per node. */
+            Sockets,
+
+            /** State of nodes, compact form. */
+            StateCompact,
+
+            /** State of nodes, extended form. */
+            StateLong,
+
+            /** State of nodes, including all node state flags. eg. "idle+cloud+power" */
+            StateComplete,
+
+            /** Number of threads per core. */
+            Threads,
+
+            /** Maximum time for any job in the format "days-hours:minutes:seconds". */
+            Time,
+
+            /** Print the timestamp of the reason a node is unavailable. */
+            TimeStamp,
+
+            /** Print the user name of who set the reason a node is unavailable. */
+            User,
+
+            /** Print the user name and uid of who set the reason a node is unavailable. */
+            UserLong,
+
+            /** Print the version of the running slurmd daemon. */
+            Version,
+
+            /** Scheduling weight of the nodes. */
+            Weight
+        }
+    }
+
+    @SlurmMarker
+    inner class FormatBuilder {
+
+        operator fun Format.Type.invoke(block: Format.() -> Unit) {
+            this@Sinfo.format += Format(this).run {
+                block()
+                val type = type.name
+                val justified = if (rightJustified) "." else ""
+                "$type:$justified$size$suffix"
+            }
+        }
     }
 }
 
@@ -233,21 +274,10 @@ class SinfoBuilder(val sinfo: Sinfo = Sinfo()) {
         sinfo.help
     }
 
-    /** Do not display information about hidden partitions. Partitions that are configured as hidden or are not
-     *  available to the user's group will not be displayed. This is the default behavior. */
-    fun hide() {
-        sinfo.hide = true
-    }
-
     /** Print the state on a periodic basis. Sleep for the indicated number of seconds between reports. By default
      *  prints a time stamp with the header. */
     fun iterate(period: Second) {
         sinfo.iterate = period
-    }
-
-    /** Dump node information as JSON. All other formating and filtering arugments will be ignored. */
-    fun json() {
-        sinfo.json = true
     }
 
     /** Show only jobs local to this cluster. Ignore other clusters in this federation (if any). Overrides `federation`. */
@@ -430,7 +460,7 @@ class SinfoBuilder(val sinfo: Sinfo = Sinfo()) {
      *          justified.
      *      suffix
      *          Arbitrary string to append to the end of the field. */
-    fun format(block: FormatBuilder.() -> Unit) = FormatBuilder(sinfo).block()
+    fun format(block: Sinfo.FormatBuilder.() -> Unit) = sinfo.FormatBuilder().block()
 
     /** Print information only about the specified partition(s). Multiple partitions are separated by commas. */
     fun partition(vararg partitions: String) {
@@ -501,180 +531,6 @@ class SinfoBuilder(val sinfo: Sinfo = Sinfo()) {
     /** Print version information and exit. */
     fun version() {
         sinfo.version = true
-    }
-
-    /** Dump node information as YAML. All other formating and filtering arugments will be ignored. */
-    fun yaml() {
-        sinfo.yaml = true
-    }
-}
-
-@SlurmMarker
-class Format(val type: Type) {
-    var size = 20
-    var rightJustified = false
-    var suffix = ""
-
-    enum class Type {
-        /** Print all fields available in the -o format for this data type with a vertical bar separating each field. */
-        All,
-
-        /** Prints the amount of allocated memory on a node. */
-        AllocMem,
-
-        /** Allowed allocating nodes. */
-        AllocNodes,
-
-        /** State/availability of a partition. */
-        Available,
-
-        /** Print the cluster name if running in a federation. */
-        Cluster,
-
-        /** Comment. (Arbitrary descriptive string) */
-        Comment,
-
-        /** Number of cores per socket. */
-        Cores,
-
-        /** Number of CPUs per node. */
-        CPUs,
-
-        /** CPU load of a node. */
-        CPUsLoad,
-
-        /** Number of CPUs by state in the format "allocated/idle/other/total". Do not use this with a node state option ("%t" or "%T") or the different node states will be placed on separate lines. */
-        CPUsState,
-
-        /** Default time for any job in the format "days-hours:minutes:seconds". */
-        DefaultTime,
-
-        /** Size of temporary disk space per node in megabytes. */
-        Disk,
-
-        /** Arbitray string on the node. */
-        Extra,
-
-        /** Features available on the nodes. Also see features_act. */
-        Features,
-
-        /** Features currently active on the nodes. Also see features. */
-        features_act,
-
-        /** Free memory of a node. */
-        FreeMem,
-
-        /** Generic resources (gres) associated with the nodes. */
-        Gres,
-
-        /** Generic resources (gres) currently in use on the nodes. */
-        GresUsed,
-
-        /** Groups which may use the nodes. */
-        Groups,
-
-        /** The max number of CPUs per node available to jobs in the partition. */
-        MaxCPUsPerNode,
-
-        /** Size of memory per node in megabytes. */
-        Memory,
-
-        /** List of node communication addresses. */
-        NodeAddr,
-
-        /** Number of nodes by state in the format "allocated/idle". Do not use this with a node state option ("%t" or "%T") or the different node states will be placed on separate lines. */
-        NodeAI,
-
-        /** Number of nodes by state in the format "allocated/idle/other/total". Do not use this with a node state option ("%t" or "%T") or the different node states will be placed on separate lines. */
-        NodeAIOT,
-
-        /** List of node hostnames. */
-        NodeHost,
-
-        /** List of node names. */
-        NodeList,
-
-        /** Number of nodes. */
-        Nodes,
-
-        /** Whether jobs may oversubscribe compute resources (e.g. CPUs). */
-        OverSubscribe,
-
-        /** Partition name followed by "*" for the default partition, also see %R. */
-        Partition,
-
-        /** Partition name, also see %P. */
-        PartitionName,
-
-        /** Node TCP port. */
-        Port,
-
-        /** Preemption mode. */
-        PreemptMode,
-
-        /** Partition factor used by priority/multifactor plugin in calculating job priority. */
-        PriorityJobFactor,
-
-        /** Partition scheduling tier priority. */
-        PriorityTier,
-
-        /** The reason a node is unavailable (down, drained, or draining states). */
-        Reason,
-
-        /** Only user root may initiate jobs, "yes" or "no". */
-        Root,
-
-        /** Maximum job size in nodes. */
-        Size,
-
-        /** Extended processor information: number of sockets, cores, threads (S:C:T) per node. */
-        SocketCoreThread,
-
-        /** Number of sockets per node. */
-        Sockets,
-
-        /** State of nodes, compact form. */
-        StateCompact,
-
-        /** State of nodes, extended form. */
-        StateLong,
-
-        /** State of nodes, including all node state flags. eg. "idle+cloud+power" */
-        StateComplete,
-
-        /** Number of threads per core. */
-        Threads,
-
-        /** Maximum time for any job in the format "days-hours:minutes:seconds". */
-        Time,
-
-        /** Print the timestamp of the reason a node is unavailable. */
-        TimeStamp,
-
-        /** Print the user name of who set the reason a node is unavailable. */
-        User,
-
-        /** Print the user name and uid of who set the reason a node is unavailable. */
-        UserLong,
-
-        /** Print the version of the running slurmd daemon. */
-        Version,
-
-        /** Scheduling weight of the nodes. */
-        Weight
-    }
-}
-
-@SlurmMarker
-class FormatBuilder(val sinfo: Sinfo) {
-
-    operator fun Format.Type.invoke(block: Format.() -> Unit) {
-        sinfo.format += Format(this).run {
-            block()
-            val type = type.name
-            val justified = if (rightJustified) "." else ""
-            "$type:$justified$size$suffix"
-        }
     }
 }
 

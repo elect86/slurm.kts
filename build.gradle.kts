@@ -29,6 +29,10 @@ repositories {
 }
 
 dependencies {
+
+    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta2")
+    implementation("com.github.ajalt.mordant:mordant-jvm:2.0.0-beta2")
+
     // Align versions of all Kotlin components
     implementation(platform(kotlin("bom", embeddedKotlinVersion)))
 
