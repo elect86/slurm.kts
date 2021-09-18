@@ -19,9 +19,6 @@ fun main() {
     //        header { row("CJK", "Emojis") }
     //        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
     //    })
-    println("terminal.info.width:${terminal.info.width}")
-    terminal.info.updateTerminalSize()
-    println("terminal.info.width:${terminal.info.width}")
     partitions.print()
 }
 
@@ -89,7 +86,7 @@ val partitions: List<Partition> by lazy {
         .map { Partition(it.split(Regex("\\s+"))) }
 }
 
-val terminal = Terminal()
+val terminal = Terminal(width = 100)
 
 @ExperimentalTime
 fun List<Partition>.print(head: Int = 10) {
