@@ -1,5 +1,7 @@
 package slurm
 
+import com.github.ajalt.mordant.rendering.BorderStyle
+import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
@@ -87,22 +89,21 @@ val partitions: List<Partition> by lazy {
 val terminal = Terminal()
 
 @ExperimentalTime
-fun List<Partition>.print() {
+fun List<Partition>.print(head: Int = 5) {
     terminal.print(table {
+        borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
+        align = TextAlign.RIGHT
+        outerBorder = false
         header {
-            row("Partition", "Avail", "TimeLimit", "JobSize", "Root", "Oversubs"/*, "Groups", "Nodes", "State", "NodeList"*/)
+            row("Partition", "Avail", "TimeLimit", "JobSize", "Root", "Oversubs", "Groups"/*, "Nodes", "State", "NodeList"*/)
         }
         body {
-            for (p in this@print) {
+            for (p in this@print.dropLast(size - head)) {
                 var name = p.name
                 if (p.default)
                     name += '*'
                 val availability = if (p.availability) "✅" else "❌"
-                val days = p.timeLimit.inWholeDays
-                val hours = p.timeLimit.inWholeHours
-                val min = p.timeLimit.inWholeMinutes
-                val sec = p.timeLimit.inWholeSeconds
-                val timelimit = "$days-$hours:$min:$sec"
+                val timelimit = p.timeLimit.toComponents { days, hours, min, sec, _ -> "$days-$hours:$min:$sec" }
                 val last = when (p.jobSize.last) {
                     Int.MAX_VALUE -> '\u221E'.toString()
                     else -> p.jobSize.last.toString()
@@ -110,7 +111,7 @@ fun List<Partition>.print() {
                 val jobSize = "${p.jobSize.first}-$last"
                 val root = if (p.root) "yes" else "no"
                 val oversubs = if (p.oversubs) "yes" else "no"
-                row(name, availability, timelimit, jobSize, root, oversubs/*, p.groups, p.nodes, p.state, p.nodeList.joinToString(",")*/)
+                row(name, availability, timelimit, jobSize, root, oversubs, p.groups/*, p.nodes, p.state, p.nodeList.joinToString(",")*/)
             }
         }
     })
