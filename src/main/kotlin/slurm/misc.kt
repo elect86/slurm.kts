@@ -9,12 +9,14 @@ import kotlin.time.toKotlinDuration
 operator fun StringBuilder.plus(string: String): StringBuilder = append(string)
 operator fun StringBuilder.plus(char: Char): StringBuilder = append(char)
 
+@ExperimentalTime
 fun main() {
-    val t = Terminal()
-    t.println(table {
-        header { row("CJK", "Emojis") }
-        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
-    })
+//    val t = Terminal()
+//    t.println(table {
+//        header { row("CJK", "Emojis") }
+//        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
+//    })
+    partitions.print()
 }
 
 @ExperimentalTime
