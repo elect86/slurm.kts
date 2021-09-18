@@ -10,11 +10,12 @@ operator fun StringBuilder.plus(string: String): StringBuilder = append(string)
 operator fun StringBuilder.plus(char: Char): StringBuilder = append(char)
 
 fun main() {
-    val t = com.github.ajalt.mordant.terminal.Terminal()
-    t.println(table {
-        header { row("CJK", "Emojis") }
-        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
-    })
+//    val t = Terminal()
+//    t.println(table {
+//        header { row("CJK", "Emojis") }
+//        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
+//    })
+    println("ciao")
 }
 
 @ExperimentalTime

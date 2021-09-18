@@ -18,6 +18,8 @@ plugins {
 
     id("elect86.magik") version "0.2.0"
     `maven-publish`
+
+    application
 }
 
 version = "0.0.13"
@@ -26,6 +28,10 @@ group = "elect86"
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+}
+
+application {
+    mainClass.set("slurm.MiscKt")
 }
 
 dependencies {
