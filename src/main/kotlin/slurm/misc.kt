@@ -95,7 +95,7 @@ fun List<Partition>.print(head: Int = 10) {
         align = TextAlign.RIGHT
         outerBorder = false
         header {
-            row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Groups", "Nodes", "State"/*, "NodeList"*/)
+            row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Groups", "Nodes", "State", "NodeList")
         }
         body {
             for (p in this@print.dropLast(size - head)) {
@@ -126,7 +126,7 @@ fun List<Partition>.print(head: Int = 10) {
                 val jobSize = "${p.jobSize.first}-$last"
                 val root = if (p.root) "yes" else "no"
                 val oversubs = if (p.oversubs) "yes" else "no"
-                row(name, availability, timelimit, jobSize, root, oversubs, p.groups, p.nodes, p.state/*, p.nodeList.joinToString(",")*/)
+                row(name, availability, timelimit, jobSize, root, oversubs, p.groups, p.nodes, p.state, p.nodeList.joinToString(","))
             }
         }
     })
