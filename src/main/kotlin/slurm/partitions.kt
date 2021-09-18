@@ -80,9 +80,9 @@ fun List<Partition>.print(head: Int = size) {
         header {
             row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Groups", "Nodes", "State", "NodeList")
         }
-        column(2) {
-            align = TextAlign.RIGHT
-        }
+        column(2) { align = TextAlign.RIGHT }
+        column(6) { align = TextAlign.CENTER }
+        column(7) { align = TextAlign.RIGHT }
         body {
             for (p in this@print.dropLast(size - head)) {
                 var name = p.name
