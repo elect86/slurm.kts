@@ -89,13 +89,13 @@ val partitions: List<Partition> by lazy {
 val terminal = Terminal()
 
 @ExperimentalTime
-fun List<Partition>.print(head: Int = 5) {
+fun List<Partition>.print(head: Int = 10) {
     terminal.print(table {
         borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
         align = TextAlign.RIGHT
         outerBorder = false
         header {
-            row("Partition", "Avail", "TimeLimit", "JobSize", "Root", "Oversubs", "Groups"/*, "Nodes", "State", "NodeList"*/)
+            row("Partition", "Av", "TimeLimit", "JobSize", "Root", "Oversubs", "Groups", "Nodes"/*, "State", "NodeList"*/)
         }
         body {
             for (p in this@print.dropLast(size - head)) {
@@ -111,7 +111,7 @@ fun List<Partition>.print(head: Int = 5) {
                 val jobSize = "${p.jobSize.first}-$last"
                 val root = if (p.root) "yes" else "no"
                 val oversubs = if (p.oversubs) "yes" else "no"
-                row(name, availability, timelimit, jobSize, root, oversubs, p.groups/*, p.nodes, p.state, p.nodeList.joinToString(",")*/)
+                row(name, availability, timelimit, jobSize, root, oversubs, p.groups, p.nodes/*, p.state, p.nodeList.joinToString(",")*/)
             }
         }
     })
