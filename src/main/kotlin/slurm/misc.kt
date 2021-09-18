@@ -92,7 +92,7 @@ val terminal = Terminal()
 fun List<Partition>.print(head: Int = 10) {
     terminal.print(table {
         borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
-        align = TextAlign.RIGHT
+        align = TextAlign.LEFT
         outerBorder = false
         header {
             row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Groups", "Nodes", "State", "NodeList")
