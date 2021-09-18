@@ -82,7 +82,7 @@ fun List<Partition>.print(head: Int = size) {
         }
         column(2) { align = TextAlign.RIGHT }
         column(6) { align = TextAlign.CENTER }
-        column(7) { align = TextAlign.RIGHT }
+        column(7) { align = TextAlign.CENTER }
         body {
             for (p in this@print.dropLast(size - head)) {
                 var name = p.name
