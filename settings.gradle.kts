@@ -14,5 +14,5 @@ pluginManagement {
 //        gradlePluginPortal()
 //        maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
 //    }
-    includeBuild("../magik")
+//    includeBuild("../magik")
 }
