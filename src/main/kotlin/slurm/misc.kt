@@ -86,7 +86,7 @@ val partitions: List<Partition> by lazy {
         .map { Partition(it.split(Regex("\\s+"))) }
 }
 
-val terminal = Terminal(width = 100)
+val terminal = Terminal(width = 200)
 
 @ExperimentalTime
 fun List<Partition>.print(head: Int = 10) {
