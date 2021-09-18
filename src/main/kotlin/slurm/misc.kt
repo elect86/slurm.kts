@@ -19,6 +19,9 @@ fun main() {
     //        header { row("CJK", "Emojis") }
     //        body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
     //    })
+    println("terminal.info.width:${terminal.info.width}")
+    terminal.info.updateTerminalSize()
+    println("terminal.info.width:${terminal.info.width}")
     partitions.print()
 }
 
