@@ -80,6 +80,9 @@ fun List<Partition>.print(head: Int = size) {
         header {
             row("Partition", "Av", "TimeLimit", "JS", "Rt", "OS", "Groups", "Nodes", "State", "NodeList")
         }
+        column(2) {
+            align = TextAlign.RIGHT
+        }
         body {
             for (p in this@print.dropLast(size - head)) {
                 var name = p.name
@@ -94,7 +97,7 @@ fun List<Partition>.print(head: Int = size) {
                             something = true
                         }
                         if (hours != 0 || something) {
-                            append("$hours:")
+                            append("%02d:".format(hours))
                             something = true
                         }
                         if (min != 0 || something)

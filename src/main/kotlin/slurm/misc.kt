@@ -1,13 +1,7 @@
 package slurm
 
-import com.github.ajalt.mordant.rendering.BorderStyle
-import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.toKotlinDuration
 
 operator fun StringBuilder.plus(string: String): StringBuilder = append(string)
 operator fun StringBuilder.plus(char: Char): StringBuilder = append(char)
