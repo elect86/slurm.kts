@@ -64,33 +64,9 @@ fun List<NodeList>.print(head: Int = size) {
         column(7) { align = TextAlign.RIGHT }
         column(8) { align = TextAlign.RIGHT }
         body {
-            for (p in this@print.dropLast(size - head)) {
-                val mem = p.memory.GB.value
-//                val timelimit = p.timeLimit.toComponents { days, hours, min, sec, _ ->
-//                    buildString {
-//                        var something = false
-//                        if (days != 0) {
-//                            append("$days-")
-//                            something = true
-//                        }
-//                        if (hours != 0 || something) {
-//                            append("%02d:".format(hours))
-//                            something = true
-//                        }
-//                        if (min != 0 || something)
-//                            append("%02d:".format(min))
-//                        append("%02d".format(sec))
-//                    }
-//                }
-//                val last = when (p.jobSize.last) {
-//                    Int.MAX_VALUE -> '\u221E'.toString()
-//                    else -> p.jobSize.last.toString()
-//                }
-//                val jobSize = "${p.jobSize.first}-$last"
-//                val root = if (p.root) "yes" else "no"
-//                val oversubs = if (p.oversubs) "yes" else "no"
-                row(p.name, p.nodes, p.partition, p.state, p.cpus, p.socketCoreThread, mem, p.tmpDisk, p.weight, p.availFe, p.reason)
-            }
+            for (p in this@print.dropLast(size - head))
+                row(p.name, p.nodes, p.partition, p.state, p.cpus, p.socketCoreThread, p.memory.GB.value, p.tmpDisk,
+                    p.weight, p.availFe, p.reason)
         }
     })
 }

@@ -1,5 +1,14 @@
 package slurm
 
+
+fun main() {
+    squeue {
+        partitions("kepler027")
+        states(Squeue.JobStateCode.COMPLETED)
+        format("%.6i", "%p")
+    }
+}
+
 inline fun squeue(block: SqueueBuilder.() -> Unit) = SqueueBuilder().block()
 
 @SlurmMarker
