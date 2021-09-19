@@ -73,24 +73,6 @@ sealed class DataType(val interval: Second) {
     class filesystem(interval: Second = 0.s) : DataType(interval)
 }
 
-val Int.s
-    get() = Second(this)
-
-@JvmInline
-value class Second(val value: Int)
-
-val Int.minute
-    get() = Minute(this)
-
-@JvmInline
-value class Minute(val value: Int)
-
-val Int.kHz
-    get() = kHz(this)
-
-@JvmInline
-value class kHz(val value: Int)
-
 enum class FrequencyPolicy { low, medium, high, highm1, Conservative, OnDemand, Performance, PowerSave }
 
 class DependencyBuilder(val sbatch: Sbatch = Sbatch()) {
@@ -155,6 +137,3 @@ open class Job(val id: Int)
 class JobTime(id: Int, val time: Minute) : Job(id)
 
 enum class Exclusive { otherRunningJobs, user, mcs }
-
-@DslMarker
-annotation class SlurmMarker
