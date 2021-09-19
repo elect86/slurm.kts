@@ -36,6 +36,7 @@ fun NodeList(line: List<String>): NodeList {
     return NodeList(name, nodes, partition, state, cpus, sct, memory, tmpDisk, weight, availFe, reason)
 }
 
+@ExperimentalTime
 fun main() {
     nodelists.print()
 }
