@@ -33,6 +33,7 @@ repositories {
 application {
     mainClass.set("slurm.MiscKt")
     mainClass.set("slurm.NodesKt")
+    mainClass.set("slurm.SqueueKt")
 }
 
 dependencies {
