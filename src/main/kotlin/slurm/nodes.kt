@@ -37,7 +37,7 @@ fun NodeList(line: List<String>): NodeList {
 }
 
 fun main() {
-    val a = nodelists
+    nodelists.print()
 }
 
 val nodelists: List<NodeList> by lazy {
