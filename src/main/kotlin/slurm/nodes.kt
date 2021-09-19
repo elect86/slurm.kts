@@ -61,10 +61,11 @@ fun List<NodeList>.print(head: Int = size) {
         column(1) { align = TextAlign.RIGHT }
         column(3) { align = TextAlign.CENTER }
         column(4) { align = TextAlign.RIGHT }
-//        column(8) { align = TextAlign.CENTER }
+        column(7) { align = TextAlign.RIGHT }
+        column(8) { align = TextAlign.RIGHT }
         body {
             for (p in this@print.dropLast(size - head)) {
-                val mem = p.memory.GB
+                val mem = p.memory.GB.value
 //                val timelimit = p.timeLimit.toComponents { days, hours, min, sec, _ ->
 //                    buildString {
 //                        var something = false
