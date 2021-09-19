@@ -3,8 +3,8 @@ package slurm
 
 fun main() {
     squeue {
-        partitions("kepler027")
-        states(Squeue.JobStateCode.COMPLETED)
+        partitions("intel")
+        states(Squeue.JobStateCode.PENDING)
         format("%.6i", "%p")
     }
 }
