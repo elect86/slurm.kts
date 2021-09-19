@@ -45,7 +45,7 @@ class Squeue {
     var nodelist = ""
 
     operator fun invoke() {
-        buildString {
+        val cmd = buildString {
             append("squeue")
             if (accounts.isNotEmpty()) append(" -A ${accounts.joinToString(",")}")
             if (all) append(" -a")
@@ -81,6 +81,8 @@ class Squeue {
             if (version) append(" -V")
             if (nodelist.isNotEmpty()) append(" -w $nodelist")
         }
+        println("running`$cmd`")
+        println(cmd.invoke())
     }
 
     @SlurmMarker
