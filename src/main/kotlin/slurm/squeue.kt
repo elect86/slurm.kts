@@ -9,7 +9,11 @@ fun main() {
     }
 }
 
-inline fun squeue(block: SqueueBuilder.() -> Unit) = SqueueBuilder().block()
+inline fun squeue(block: SqueueBuilder.() -> Unit) {
+    val squeue = Squeue()
+    SqueueBuilder(squeue).block()
+    squeue()
+}
 
 @SlurmMarker
 class Squeue {
