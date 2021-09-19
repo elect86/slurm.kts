@@ -36,10 +36,9 @@ fun main() {
 }
 
 val nodelists: List<NodeList> by lazy {
-    println("sinfo -Nel"().lines().last().run { isBlank() || isEmpty() })
     "sinfo -Nel"()
         .lines()
         .drop(2) // date and titles
-//        .dropLast(1) // last one
+        .dropLast(1) // last one
         .map { NodeList(it.split(Regex("\\s+"))) }
 }
