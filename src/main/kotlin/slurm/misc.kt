@@ -19,8 +19,13 @@ fun main() {
 val terminal = Terminal(width = 300)
 
 @JvmInline
-value class MB(val value: Int)
+value class MB(val value: Int) {
+    val GB
+        get() = GB(value / 1_000)
+}
 
+@JvmInline
+value class GB(val value: Int)
 
 
 operator fun String.invoke(): String {

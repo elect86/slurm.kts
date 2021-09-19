@@ -56,14 +56,15 @@ fun List<NodeList>.print(head: Int = size) {
         align = TextAlign.LEFT
         outerBorder = false
         header {
-            row("NodeList", "Nodes", "Partition", "State", "CPUs"/*, "OS", "Gr", "Nd", "State", "NodeList"*/)
+            row("NodeList", "Nodes", "Partition", "State", "CPUs", "S:C:T", "Mem(GB)", "TmpDisk", "Weight", "AvailFe", "Reason")
         }
-//        column(2) { align = TextAlign.RIGHT }
-//        column(6) { align = TextAlign.CENTER }
-//        column(7) { align = TextAlign.RIGHT }
+        column(1) { align = TextAlign.RIGHT }
+        column(3) { align = TextAlign.CENTER }
+        column(4) { align = TextAlign.RIGHT }
 //        column(8) { align = TextAlign.CENTER }
         body {
             for (p in this@print.dropLast(size - head)) {
+                val mem = p.memory.GB
 //                val timelimit = p.timeLimit.toComponents { days, hours, min, sec, _ ->
 //                    buildString {
 //                        var something = false
@@ -87,7 +88,7 @@ fun List<NodeList>.print(head: Int = size) {
 //                val jobSize = "${p.jobSize.first}-$last"
 //                val root = if (p.root) "yes" else "no"
 //                val oversubs = if (p.oversubs) "yes" else "no"
-                row(p.name, p.nodes, p.partition, p.state, p.cpus/*, oversubs, p.groups, p.nodes, p.state, p.nodeList.joinToString(",")*/)
+                row(p.name, p.nodes, p.partition, p.state, p.cpus, p.socketCoreThread, mem, p.tmpDisk, p.weight, p.availFe, p.reason)
             }
         }
     })
