@@ -3,9 +3,9 @@ package slurm
 
 fun main() {
     squeue {
-//        partitions("intel")
-//        states(Squeue.JobStateCode.PENDING)
-//        format("%.6i", "%p")
+        //        partitions("intel")
+        //        states(Squeue.JobStateCode.PENDING)
+        //        format("%.6i", "%p")
 
         steps()
         partitions("intel")
@@ -42,7 +42,7 @@ class Squeue {
     var priority = false
     val qos = ArrayList<String>()
     var reservation = ""
-    val steps = ArrayList<String>()
+    var steps: ArrayList<String>? = null
     var sibling = false
     var order = ""
     var start = false
@@ -79,7 +79,7 @@ class Squeue {
             if (priority) append(" -P")
             if (qos.isNotEmpty()) append(" -q ${qos.joinToString(",")}")
             if (reservation.isNotEmpty()) append(" -R $reservation")
-            if (steps.isNotEmpty()) append(" -s${steps.joinToString(",")}")
+            steps?.run { append(" -s${joinToString(",")}") }
             if (sibling) append(" --sibling")
             if (order.isNotEmpty()) append(" -S $order")
             if (start) append(" --start")
@@ -909,7 +909,7 @@ class SqueueBuilder(val squeue: Squeue = Squeue()) {
      *  steps. Since this option's argument is optional, for proper parsing the single letter option must be followed
      *  immediately with the value and not include a space between them. For example "-s1008.0" and not "-s 1008.0". */
     fun steps(vararg steps: String) {
-        squeue.steps += steps
+        squeue.steps = arrayListOf(*steps)
     }
 
     /** Show all sibling jobs on a federated cluster. Implies `federation`. */
