@@ -7,9 +7,11 @@ fun main() {
         //        states(Squeue.JobStateCode.PENDING)
         //        format("%.6i", "%p")
 
-        steps()
-        partitions("intel")
-        sort("u")
+//        steps()
+//        partitions("intel")
+//        sort("u")
+
+        jobs(3684390, )
     }
 }
 
@@ -30,7 +32,7 @@ class Squeue {
     var help = false
     var hide = false
     var iterate = Second(0)
-    val jobs = ArrayList<String>()
+    val jobs = ArrayList<Int>()
     var local = false
     var long = false
     val licenses = ArrayList<String>()
@@ -655,8 +657,8 @@ class SqueueBuilder(val squeue: Squeue = Squeue()) {
      *  "job_id[_array_id]". Performance of the command can be measurably improved for systems with large numbers of
      *  jobs when a single job ID is specified. By default, this field size will be limited to 64 bytes. Use the
      *  environment variable SLURM_BITSTR_LEN to specify larger field sizes. */
-    fun jobs(vararg jobs: String) {
-        squeue.jobs += jobs
+    fun jobs(vararg jobs: Int) {
+        squeue.jobs += jobs.toList()
     }
 
     /** Show only jobs local to this cluster. Ignore other clusters in this federation (if any). Overrides `federation`. */
