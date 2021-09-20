@@ -3,9 +3,13 @@ package slurm
 
 fun main() {
     squeue {
+//        partitions("intel")
+//        states(Squeue.JobStateCode.PENDING)
+//        format("%.6i", "%p")
+
+        steps()
         partitions("intel")
-        states(Squeue.JobStateCode.PENDING)
-        format("%.6i", "%p")
+        sort("u")
     }
 }
 
@@ -85,7 +89,7 @@ class Squeue {
             if (version) append(" -V")
             if (nodelist.isNotEmpty()) append(" -w $nodelist")
         }
-        println("running`$cmd`")
+        println("running `$cmd`")
         println(cmd.invoke())
     }
 

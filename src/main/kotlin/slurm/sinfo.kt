@@ -62,7 +62,7 @@ class Sinfo {
             if (states.isNotEmpty()) append(" -t ${states.joinToString(",")}")
             if (reservation) append(" -T")
         }
-        println("running`$cmd`")
+        println("running `$cmd`")
         println(cmd.invoke())
     }
 

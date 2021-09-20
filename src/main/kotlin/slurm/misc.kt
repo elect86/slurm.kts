@@ -29,7 +29,7 @@ value class GB(val value: Int)
 
 
 operator fun String.invoke(): String {
-    val process = ProcessBuilder(*split(" ").toTypedArray())
+    val process = ProcessBuilder(*split(Regex("\\s+(?![^\"]*[\"])")).toTypedArray())
         //        .directory(workingDir)
         //        .redirectOutput(Redirect.INHERIT)
         //        .redirectError(Redirect.INHERIT)
