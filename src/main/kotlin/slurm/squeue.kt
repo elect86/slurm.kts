@@ -7,11 +7,11 @@ fun main() {
         //        states(Squeue.JobStateCode.PENDING)
         //        format("%.6i", "%p")
 
-//        steps()
-//        partitions("intel")
-//        sort("u")
+        //        steps()
+        //        partitions("intel")
+        //        sort("u")
 
-        jobs(3684390, )
+        jobs(3684390..3684392)
     }
 }
 
@@ -659,6 +659,19 @@ class SqueueBuilder(val squeue: Squeue = Squeue()) {
      *  environment variable SLURM_BITSTR_LEN to specify larger field sizes. */
     fun jobs(vararg jobs: Int) {
         squeue.jobs += jobs.toList()
+    }
+
+    /** Requests a comma separated list of job IDs to display. Defaults to all jobs. The `jobs(<job_id_list>)` option
+     *  may be used in conjunction with the `steps` option to print step information about specific jobs. Note: If a
+     *  list of job IDs is provided, the jobs are displayed even if they are on hidden partitions. Since this option's
+     *  argument is optional, for proper parsing the single letter option must be followed immediately with the value
+     *  and not include a space between them. For example "-j1008" and not "-j 1008". The job ID format is
+     *  "job_id[_array_id]". Performance of the command can be measurably improved for systems with large numbers of
+     *  jobs when a single job ID is specified. By default, this field size will be limited to 64 bytes. Use the
+     *  environment variable SLURM_BITSTR_LEN to specify larger field sizes. */
+    fun jobs(jobs: IntRange) {
+        for (job in jobs)
+            squeue.jobs += job
     }
 
     /** Show only jobs local to this cluster. Ignore other clusters in this federation (if any). Overrides `federation`. */
