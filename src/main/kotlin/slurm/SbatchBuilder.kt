@@ -324,6 +324,20 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
         for (typeNumber in typeNumbers)
             sbatch.gpus += typeNumber
     }
+
+    inline fun gpuBind(block: GpuBindBuilder.() -> Unit) {
+
+    }
+
+    inner class GpuBindBuilder {
+        fun closest() {
+            sbatch.gpuBind = "closest"
+        }
+        fun mapGpu(vararg gpuId: Int) {
+            sbatch.gpuBind = "map_gpu:${gpuId.joinToString(",")}"
+        }
+//        fun maskGpu(vararg gpuMask)
+    }
 }
 
 

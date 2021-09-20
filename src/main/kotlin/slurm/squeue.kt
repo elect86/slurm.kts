@@ -3,15 +3,16 @@ package slurm
 
 fun main() {
     squeue {
-        //        partitions("intel")
-        //        states(Squeue.JobStateCode.PENDING)
-        //        format("%.6i", "%p")
+        partitions("intel")
+        states(Squeue.JobStateCode.PENDING)
+        format("%.6i", "%p")
 
         //        steps()
         //        partitions("intel")
         //        sort("u")
 
-        jobs(3684390..3684392)
+        //        jobs(3684390..3684392)
+        //        steps("3684390.1")
     }
 }
 

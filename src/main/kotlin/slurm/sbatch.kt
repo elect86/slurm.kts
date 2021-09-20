@@ -44,6 +44,7 @@ class Sbatch {
     var getUserEnv: String? = null
     var groupID: String? = null
     val gpus = ArrayList<String>()
+    var gpuBind = ""
 }
 
 /** The default value for the task sampling interval is 30 seconds. The default value for all other intervals is 0.
