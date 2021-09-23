@@ -60,5 +60,11 @@ val Int.kHz
 @JvmInline
 value class kHz(val value: Int)
 
+val Int.MHz
+    get() = MHz(this)
+
+@JvmInline
+value class MHz(val value: Int)
+
 @DslMarker
 annotation class SlurmMarker

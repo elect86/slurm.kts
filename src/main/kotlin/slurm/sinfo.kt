@@ -34,7 +34,7 @@ class Sinfo {
     var verbose = false
     var version = false
 
-    operator fun invoke() {
+    operator fun invoke(): String {
         val cmd = buildString {
             append("sinfo")
             if (all) append(" -a")
@@ -63,7 +63,7 @@ class Sinfo {
             if (reservation) append(" -T")
         }
         println("running `$cmd`")
-        println(cmd.invoke())
+        return cmd()
     }
 
     @SlurmMarker
