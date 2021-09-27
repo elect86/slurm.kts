@@ -56,44 +56,45 @@ class Squeue {
     var nodelist = ""
 
     operator fun invoke(): String {
-        val cmd = buildString {
-            append("squeue")
-            if (accounts.isNotEmpty()) append(" -A ${accounts.joinToString(",")}")
-            if (all) append(" -a")
-            if (array) append(" -r")
-            if (arrayUnique) append(" --array-unique")
-            if (federation) append(" --federation")
-            if (noHeader) append(" -h")
-            if (help) append(" --help")
-            if (hide) append(" --hide")
-            if (iterate != Second(0)) append(" -i $iterate")
-            if (jobs.isNotEmpty()) append(" -j${jobs.joinToString(",")}")
-            if (local) append(" --local")
-            if (long) append(" --l")
-            if (licenses.isNotEmpty()) append(" -L${licenses.joinToString(",")}")
-            if (clusters.isNotEmpty()) append(" -M ${clusters.joinToString(",")}")
-            if (names.isNotEmpty()) append(" -n ${names.joinToString(",")}")
-            if (dontConvert) append(" --noconvert")
-            if (format.isNotEmpty()) append(when {
-                                                '%' in format[0] -> " -o \"${format.joinToString(" ")}\""
-                                                else -> " -O \"${format.joinToString(",")}\""
-                                            })
-            if (partitions.isNotEmpty()) append(" -p ${partitions.joinToString(",")}")
-            if (priority) append(" -P")
-            if (qos.isNotEmpty()) append(" -q ${qos.joinToString(",")}")
-            if (reservation.isNotEmpty()) append(" -R $reservation")
-            steps?.run { append(" -s${joinToString(",")}") }
-            if (sibling) append(" --sibling")
-            if (order.isNotEmpty()) append(" -S $order")
-            if (start) append(" --start")
-            if (states.isNotEmpty()) append(" -t ${states.joinToString(",")}")
-            if (users.isNotEmpty()) append(" -u ${users.joinToString(",")}")
-            if (verbose) append(" -v")
-            if (version) append(" -V")
-            if (nodelist.isNotEmpty()) append(" -w $nodelist")
+        val cmd = "squeue"
+        val args = ArrayList<String>()
+
+        if (accounts.isNotEmpty()) args.add("-A", accounts.joinToString(","))
+        if (all) args += "-a"
+        if (array) args += "-r"
+        if (arrayUnique) args += "--array-unique"
+        if (federation) args += "--federation"
+        if (noHeader) args += "-h"
+        if (help) args += "--help"
+        if (hide) args += "--hide"
+        if (iterate != Second(0)) args.add("-i", iterate)
+        if (jobs.isNotEmpty()) args += "-j${jobs.joinToString(",")}"
+        if (local) args += "--local"
+        if (long) args += "--l"
+        if (licenses.isNotEmpty()) args.add("-L", licenses.joinToString(","))
+        if (clusters.isNotEmpty()) args.add("-M", clusters.joinToString(","))
+        if (names.isNotEmpty()) args.add("-n", names.joinToString(","))
+        if (dontConvert) args += "--noconvert"
+        if (format.isNotEmpty()) when {
+            '%' in format[0] -> args.add("-o", "\"${format.joinToString(" ")}\"")
+            else -> args.add("-O", "\"${format.joinToString(",")}\"")
         }
-        println("running `$cmd`")
-        return cmd()
+        if (partitions.isNotEmpty()) args.add("-p", partitions.joinToString(","))
+        if (priority) args += "-P"
+        if (qos.isNotEmpty()) args.add("-q", qos.joinToString(","))
+        if (reservation.isNotEmpty()) args.add("-R", reservation)
+        steps?.run { args.add("-s${joinToString(",")}") }
+        if (sibling) args += "--sibling"
+        if (order.isNotEmpty()) args.add("-S", order)
+        if (start) args += "--start"
+        if (states.isNotEmpty()) args.add("-t", states.joinToString(","))
+        if (users.isNotEmpty()) args.add("-u", users.joinToString(","))
+        if (verbose) args += "-v"
+        if (version) args += "-V"
+        if (nodelist.isNotEmpty()) args.add("-w", nodelist)
+
+        //        println("running `$cmd`")
+        return cmd(args)
     }
 
     @SlurmMarker

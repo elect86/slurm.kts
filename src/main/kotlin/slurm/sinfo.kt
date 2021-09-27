@@ -35,35 +35,35 @@ class Sinfo {
     var version = false
 
     operator fun invoke(): String {
-        val cmd = buildString {
-            append("sinfo")
-            if (all) append(" -a")
-            if (dead) append(" -d")
-            if (exact) append(" -e")
-            if (federation) append(" --federation")
-            if (noHeader) append(" -h")
-            if (help) append(" --help")
-            if (iterate != 0.s) append(" -i ${iterate.value}")
-            if (local) append(" --local")
-            if (long) append(" -l")
-            if (clusters.isNotEmpty()) append(" -M ${clusters.joinToString(",")}")
-            if (nodes.isNotEmpty()) append(" -n ${nodes.joinToString(",")}")
-            if (dontConvert) append(" --noconvert")
-            if (node) append(" -N")
-            if (format.isNotEmpty()) append(when {
-                                                '%' in format[0] -> " -o \"${format.joinToString(" ")}\""
-                                                else -> " -O \"${format.joinToString(",")}\""
-                                            })
-            if (partitions.isNotEmpty()) append(" -p ${partitions.joinToString(",")}")
-            if (responding) append(" -r")
-            if (listReasons) append(" -R")
-            if (summarize) append(" -s")
-            if (order.isNotEmpty()) append(" -S $order")
-            if (states.isNotEmpty()) append(" -t ${states.joinToString(",")}")
-            if (reservation) append(" -T")
+        val cmd = "sinfo"
+        val args = ArrayList<String>()
+        if (all) args += "-a"
+        if (dead) args += "-d"
+        if (exact) args += "-e"
+        if (federation) args += "--federation"
+        if (noHeader) args += "-h"
+        if (help) args += "--help"
+        if (iterate != 0.s) args.add("-i", iterate.value)
+        if (local) args += "--local"
+        if (long) args += "-l"
+        if (clusters.isNotEmpty()) args.add("-M", clusters.joinToString(","))
+        if (nodes.isNotEmpty()) args.add("-n", nodes.joinToString(","))
+        if (dontConvert) args += "--noconvert"
+        if (node) args += "-N"
+        if (format.isNotEmpty()) when {
+            '%' in format[0] -> args.add("-o", "\"${format.joinToString(" ")}\"")
+            else -> args.add("-O", "\"${format.joinToString(",")}\"")
         }
-        println("running `$cmd`")
-        return cmd()
+        if (partitions.isNotEmpty()) args.add("-p", partitions.joinToString(","))
+        if (responding) args += "-r"
+        if (listReasons) args += "-R"
+        if (summarize) args += "-s"
+        if (order.isNotEmpty()) args.add("-S", order)
+        if (states.isNotEmpty()) args.add("-t", states.joinToString(","))
+        if (reservation) args += "-T"
+
+        //        println("running `$cmd`")
+        return cmd(args)
     }
 
     @SlurmMarker

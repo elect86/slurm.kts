@@ -63,13 +63,12 @@ fun Partition(line: List<String>): Partition {
 }
 
 @ExperimentalTime
-val partitions: List<Partition> by lazy {
-    "sinfo -l"()
+val partitions: List<Partition>
+    get() = "sinfo"("-l")
         .lines()
         .drop(2) // date and titles
         .dropLast(1) // last one
         .map { Partition(it.split(Regex("\\s+"))) }
-}
 
 @ExperimentalTime
 fun List<Partition>.print(head: Int = size) {

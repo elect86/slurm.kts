@@ -122,128 +122,132 @@ class Sbatch {
     val exclude = ArrayList<String>()
 
     operator fun invoke(): String {
-        val cmd = buildString {
-            append("sbatch")
-            if (array.isNotEmpty()) append(" -a=${array.joinToString(",")}")
-            if (account.isNotEmpty()) append(" -A=$account")
-            //            if (acctgFreq)
-            if (extraNodeInfo.isNotEmpty()) append(" -B=$extraNodeInfo")
-            if (batch.isNotEmpty()) append(" --batch=$batch")
-            if (bb.isNotEmpty()) append(" --bb=$bb")
-            if (bbf.isNotEmpty()) append(" --bbf=$bbf")
-            if (begin != LocalDateTime.MIN) append(" -b=$begin")
-            if (checkpoint != Duration.INFINITE) append(" --checkpoint=${checkpoint.toIsoString()}")
-            if (clusterConstraint.isNotEmpty()) append(" --cluster-constraint=$clusterConstraint")
-            if (contiguous) append(" --contiguous")
-            if (coresPerSocket != -1) append(" --cores-per-socket=$coresPerSocket")
-            if (cpuFreq.isNotEmpty()) append(" --cpu-freq=$cpuFreq")
-            if (cpusPerGpu != -1) append(" --cpus-per-gpu=$cpusPerGpu")
-            if (deadline != LocalDateTime.MIN) append(" --deadline=$deadline")
-            delayBoot?.let { append(" --delay-boot=${it.value}") }
-            var dep = ""
-            if (dependencyAfter.isNotEmpty()) dep += dependencyAfter
-            if (dependencyAfterAny.isNotEmpty()) dep += dependencyAfterAny
-            if (dependencyBurstBuffer.isNotEmpty()) dep += dependencyBurstBuffer
-            if (dependencyCorr.isNotEmpty()) dep += dependencyCorr
-            if (dependencyNotOk.isNotEmpty()) dep += dependencyNotOk
-            if (dependencyOk.isNotEmpty()) dep += dependencyOk
-            if (dependencyExpand.isNotEmpty()) dep += dependencyExpand
-            if (dependencySingleton) dep += "singleton"
-            if (dep.isNotEmpty()) append(" -d=$dep")
-            chDir?.let { append(" -D=${it.absolutePath}") }
-            error?.let { append(" -e=${it.absolutePath}") }
-            exclusive?.let {
-                append(" --exclusive")
-                if (it != Exclusive.otherRunningJobs)
-                    append(it)
-            }
-            if (export.isNotEmpty()) append(" --export=${export.joinToString(",")}")
-            if (exportFile.isNotEmpty()) append(" --export-file=$exportFile")
-            nodeFile?.let { append(" -F=${it.absolutePath}") }
-            getUserEnv?.let {
-                append(" --get-user-env")
-                if (it.isNotEmpty())
-                    append("=$it")
-            }
-            if (groupID.isNotEmpty()) append(" --gid=$groupID")
-            if (gpus.isNotEmpty()) append(" -G=${gpus.joinToString(",")}")
-            if (gpuBind.isNotEmpty()) append(" --gpu-bind=$gpuBind")
-            if (gpuFreq.isNotEmpty()) append(" --gpu-freq=$gpuFreq")
-            if (gpusPerNode.isNotEmpty()) append(" --gpu-per-node=${gpusPerNode.joinToString(",")}")
-            if (gpusPerSocket.isNotEmpty()) append(" --gpu-per-socket=${gpusPerSocket.joinToString(",")}")
-            if (gpusPerTask.isNotEmpty()) append(" --gpu-per-task=${gpusPerTask.joinToString(",")}")
-            if (gres.isNotEmpty()) append(" --gres=${gres.joinToString(",")}")
-            gresFlags?.let { append(" --gres-flags=$it") }
-            if (hold) append(" -H")
-            if (help) append(" -h")
-            hint?.let { append(" --hint=$it") }
-            if (ignorePBS) append(" --ignore-pbs")
-            if (input.isNotEmpty()) append(" -i=$input")
-            if (jobName.isNotEmpty()) append(" -J=$jobName")
-            if (dontKill.isNotEmpty()) append(" -k=$dontKill")
-            if (killOnInvalidDep.isNotEmpty()) append(" --kill-on-invalid-dep=$killOnInvalidDep")
-            if (licenses.isNotEmpty()) append(" -L=${licenses.joinToString(",")}")
-            if (clusters.isNotEmpty()) append(" -M=${clusters.joinToString(",")}")
-            if (distribution.isNotEmpty()) append(" -m=$distribution")
-            if (mailTypes.isNotEmpty()) append(" --mail-type=${mailTypes.joinToString(",")}")
-            if (mailUser.isNotEmpty()) append(" --mail-user=$mailUser")
-            if (mcsLabel.isNotEmpty()) append(" --mcs-label=$mcsLabel")
-            if (mem.isNotEmpty()) append(" --mem=$mem")
-            if (memPerCpu.isNotEmpty()) append(" --mem-per-cpu=${memPerCpu}")
-            if (memPerGpu.isNotEmpty()) append(" --mem-per-gpu=${memPerGpu}")
-            if (memBind.isNotEmpty()) append(" --mem-bind=${memBind.joinToString(",")}")
-            if (minCpus != -1) append(" --mincpus=$minCpus")
-            nodes?.let {
-                append(" -N ${it.first}")
-                if (it.first != it.last)
-                    append("-${it.last}")
-            }
-            if (ntasks != -1) append(" -n=$ntasks")
-            if (network.isNotEmpty()) append(" --network=$network")
-            if (nice.isNotEmpty()) append(" --nice=$nice")
-            if (noRequeue) append(" --no-requeue")
-            if (nTasksPerCore != -1) append(" --ntasks-per-core=$nTasksPerCore")
-            if (nTasksPerNode != -1) append(" --ntasks-per-node=$nTasksPerNode")
-            if (nTasksPerSocket != -1) append(" --ntasks-per-socket=$nTasksPerSocket")
-            if (overcommit) append(" -O")
-            if (output.isNotEmpty()) append(" -o=$output")
-            openMode?.let { append(" --open-mode=$it") }
-            if (parsable) append(" --parsable")
-            if (partition.isNotEmpty()) append(" -p=${partition.joinToString(",")}")
-            if (power.isNotEmpty()) append(" --power=${power.joinToString(",")}")
-            if (priority.isNotEmpty()) append(" --priority=$priority")
-            if (profiles.isNotEmpty()) append(" --profile=$profiles")
-            if (propagate.isNotEmpty()) append(" --propagate=${propagate.joinToString(",")}")
-            if (qos.isNotEmpty()) append(" --q=$qos")
-            if (quiet) append(" -Q")
-            if (reboot) append(" --reboot")
-            if (requeue) append(" --requeue")
-            if (reservation.isNotEmpty()) append(" --reservation=$reservation")
-            if (oversubscribe) append(" -s")
-            if (coreSpec != -1) append(" -S=$coreSpec")
-            if (signal.isNotEmpty()) append(" --signal=$signal")
-            if (socketsPerNode != -1) append(" --sockets-per-node=$socketsPerNode")
-            if (switches.isNotEmpty()) append(" --switches=${switches.joinToString(",")}")
-            if (time != Duration.INFINITE) append(" -t=$time")
-            if (testOnly) append(" --test-only")
-            if (threadSpec != -1) append(" --thread-spec=$threadSpec")
-            if (threadsPerCore != -1) append(" --threads-per-core=$threadsPerCore")
-            if (timeMin != Duration.INFINITE) append(" --time-min=$timeMin")
-            if (tmp.isNotEmpty()) append(" --tmp$tmp")
-            if (usage) append(" --usage")
-            if (uid.isNotEmpty()) append(" --uid=$uid")
-            if (useMinNodes) append(" --use-min-nodes")
-            if (version) append(" -V")
-            if (verbose) append(" -v")
-            if (nodeList.isNotEmpty()) append(" -w=${nodeList.joinToString(",")}")
-            if (wait) append(" -W")
-            waitAllNodes?.let { append(" --wait-all-nodes=$it") }
-            if (wckey.isNotEmpty()) append(" --wckey")
-            if (wrap.isNotEmpty()) append(" --wrap")
-            if (exclude.isNotEmpty()) append(" -x=${exclude.joinToString(",")}")
+        val cmd = "sbatch"
+        var args = ArrayList<String>()
+        if (array.isNotEmpty()) args += "-a=${array.joinToString(",")}"
+        if (account.isNotEmpty()) args += "-A=$account"
+        //            if (acctgFreq)
+        if (extraNodeInfo.isNotEmpty()) args += "-B=$extraNodeInfo"
+        if (batch.isNotEmpty()) args += "--batch=$batch"
+        if (bb.isNotEmpty()) args += "--bb=$bb"
+        if (bbf.isNotEmpty()) args += "--bbf=$bbf"
+        if (begin != LocalDateTime.MIN) args += "-b=$begin"
+        if (checkpoint != Duration.INFINITE) args += "--checkpoint=${checkpoint.toIsoString()}"
+        if (clusterConstraint.isNotEmpty()) args += "--cluster-constraint=$clusterConstraint"
+        if (contiguous) args += "--contiguous"
+        if (coresPerSocket != -1) args += "--cores-per-socket=$coresPerSocket"
+        if (cpuFreq.isNotEmpty()) args += "--cpu-freq=$cpuFreq"
+        if (cpusPerGpu != -1) args += "--cpus-per-gpu=$cpusPerGpu"
+        if (deadline != LocalDateTime.MIN) args += "--deadline=$deadline"
+        delayBoot?.let { args += "--delay-boot=${it.value}" }
+        var dep = ""
+        if (dependencyAfter.isNotEmpty()) dep += dependencyAfter
+        if (dependencyAfterAny.isNotEmpty()) dep += dependencyAfterAny
+        if (dependencyBurstBuffer.isNotEmpty()) dep += dependencyBurstBuffer
+        if (dependencyCorr.isNotEmpty()) dep += dependencyCorr
+        if (dependencyNotOk.isNotEmpty()) dep += dependencyNotOk
+        if (dependencyOk.isNotEmpty()) dep += dependencyOk
+        if (dependencyExpand.isNotEmpty()) dep += dependencyExpand
+        if (dependencySingleton) dep += "singleton"
+        if (dep.isNotEmpty()) args += "-d=$dep"
+        chDir?.let { args += "-D=${it.absolutePath}" }
+        error?.let { args += "-e=${it.absolutePath}" }
+        exclusive?.let {
+            var arg = "--exclusive"
+            if (it != Exclusive.otherRunningJobs)
+                arg += "=$it"
+            args += arg
         }
+        if (export.isNotEmpty()) args += "--export=${export.joinToString(",")}"
+        if (exportFile.isNotEmpty()) args += "--export-file=$exportFile"
+        nodeFile?.let { args += "-F=${it.absolutePath}" }
+        getUserEnv?.let {
+            var arg = "--get-user-env"
+            if (it.isNotEmpty())
+                arg += "=$it"
+            args += arg
+        }
+        if (groupID.isNotEmpty()) args += "--gid=$groupID"
+        if (gpus.isNotEmpty()) args += "-G=${gpus.joinToString(",")}"
+        if (gpuBind.isNotEmpty()) args += "--gpu-bind=$gpuBind"
+        if (gpuFreq.isNotEmpty()) args += "--gpu-freq=$gpuFreq"
+        if (gpusPerNode.isNotEmpty()) args += "--gpu-per-node=${gpusPerNode.joinToString(",")}"
+        if (gpusPerSocket.isNotEmpty()) args += "--gpu-per-socket=${gpusPerSocket.joinToString(",")}"
+        if (gpusPerTask.isNotEmpty()) args += "--gpu-per-task=${gpusPerTask.joinToString(",")}"
+        if (gres.isNotEmpty()) args += "--gres=${gres.joinToString(",")}"
+        gresFlags?.let { args += "--gres-flags=$it" }
+        if (hold) args += "-H"
+        if (help) args += "-h"
+        hint?.let { args += "--hint=$it" }
+        if (ignorePBS) args += "--ignore-pbs"
+        if (input.isNotEmpty()) args += "-i=$input"
+        if (jobName.isNotEmpty()) args += "-J=$jobName"
+        if (dontKill.isNotEmpty()) args += "-k=$dontKill"
+        if (killOnInvalidDep.isNotEmpty()) args += "--kill-on-invalid-dep=$killOnInvalidDep"
+        if (licenses.isNotEmpty()) args += "-L=${licenses.joinToString(",")}"
+        if (clusters.isNotEmpty()) args += "-M=${clusters.joinToString(",")}"
+        if (distribution.isNotEmpty()) args += "-m=$distribution"
+        if (mailTypes.isNotEmpty()) args += "--mail-type=${mailTypes.joinToString(",")}"
+        if (mailUser.isNotEmpty()) args += "--mail-user=$mailUser"
+        if (mcsLabel.isNotEmpty()) args += "--mcs-label=$mcsLabel"
+        if (mem.isNotEmpty()) args += "--mem=$mem"
+        if (memPerCpu.isNotEmpty()) args += "--mem-per-cpu=${memPerCpu}"
+        if (memPerGpu.isNotEmpty()) args += "--mem-per-gpu=${memPerGpu}"
+        if (memBind.isNotEmpty()) args += "--mem-bind=${memBind.joinToString(",")}"
+        if (minCpus != -1) args += "--mincpus=$minCpus"
+        nodes?.let {
+            args += "-N"
+            var arg = it.first.toString()
+            if (it.first != it.last)
+                arg += "-${it.last}"
+            args += arg
+        }
+        if (ntasks != -1) args += "-n=$ntasks"
+        if (network.isNotEmpty()) args += "--network=$network"
+        if (nice.isNotEmpty()) args += "--nice=$nice"
+        if (noRequeue) args += "--no-requeue"
+        if (nTasksPerCore != -1) args += "--ntasks-per-core=$nTasksPerCore"
+        if (nTasksPerNode != -1) args += "--ntasks-per-node=$nTasksPerNode"
+        if (nTasksPerSocket != -1) args += "--ntasks-per-socket=$nTasksPerSocket"
+        if (overcommit) args += "-O"
+        if (output.isNotEmpty()) args += "-o=$output"
+        openMode?.let { args += "--open-mode=$it" }
+        if (parsable) args += "--parsable"
+        if (partition.isNotEmpty()) args += "-p=${partition.joinToString(",")}"
+        if (power.isNotEmpty()) args += "--power=${power.joinToString(",")}"
+        if (priority.isNotEmpty()) args += "--priority=$priority"
+        if (profiles.isNotEmpty()) args += "--profile=$profiles"
+        if (propagate.isNotEmpty()) args += "--propagate=${propagate.joinToString(",")}"
+        if (qos.isNotEmpty()) args += "--q=$qos"
+        if (quiet) args += "-Q"
+        if (reboot) args += "--reboot"
+        if (requeue) args += "--requeue"
+        if (reservation.isNotEmpty()) args += "--reservation=$reservation"
+        if (oversubscribe) args += "-s"
+        if (coreSpec != -1) args += "-S=$coreSpec"
+        if (signal.isNotEmpty()) args += "--signal=$signal"
+        if (socketsPerNode != -1) args += "--sockets-per-node=$socketsPerNode"
+        if (switches.isNotEmpty()) args += "--switches=${switches.joinToString(",")}"
+        if (time != Duration.INFINITE) args += "-t=$time"
+        if (testOnly) args += "--test-only"
+        if (threadSpec != -1) args += "--thread-spec=$threadSpec"
+        if (threadsPerCore != -1) args += "--threads-per-core=$threadsPerCore"
+        if (timeMin != Duration.INFINITE) args += "--time-min=$timeMin"
+        if (tmp.isNotEmpty()) args += "--tmp$tmp"
+        if (usage) args += "--usage"
+        if (uid.isNotEmpty()) args += "--uid=$uid"
+        if (useMinNodes) args += "--use-min-nodes"
+        if (version) args += "-V"
+        if (verbose) args += "-v"
+        if (nodeList.isNotEmpty()) args += "-w=${nodeList.joinToString(",")}"
+        if (wait) args += "-W"
+        waitAllNodes?.let { args += " --wait-all-nodes=$it" }
+        if (wckey.isNotEmpty()) args += "--wckey"
+        if (wrap.isNotEmpty()) args += "--wrap"
+        if (exclude.isNotEmpty()) args += "-x=${exclude.joinToString(",")}"
+
         println("running `$cmd`")
-        return cmd()
+        return cmd(args)
     }
 
     enum class GresFlag {

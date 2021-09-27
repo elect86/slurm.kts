@@ -28,8 +28,11 @@ value class MB(val value: Int) {
 value class GB(val value: Int)
 
 
-operator fun String.invoke(): String {
-    val process = ProcessBuilder(*split(Regex("\\s+(?=[^\"]*(?:\"[^\"]*\"[^\"]*)*\$)")).toTypedArray())
+operator fun String.invoke(arg: String): String = invoke(arrayListOf(arg))
+
+operator fun String.invoke(args: ArrayList<String>): String {
+    args.add(0, this)
+    val process = ProcessBuilder(args)
         //        .directory(workingDir)
         //        .redirectOutput(Redirect.INHERIT)
         //        .redirectError(Redirect.INHERIT)
@@ -68,3 +71,8 @@ value class MHz(val value: Int)
 
 @DslMarker
 annotation class SlurmMarker
+
+fun ArrayList<String>.add(key: String, value: Any) {
+    add(key)
+    add(value.toString())
+}

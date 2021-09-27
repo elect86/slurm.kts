@@ -41,13 +41,12 @@ fun main() {
     nodelists.print()
 }
 
-val nodelists: List<NodeList> by lazy {
-    "sinfo -Nel"()
+val nodelists: List<NodeList>
+    get() = "sinfo"("-Nel")
         .lines()
         .drop(2) // date and titles
         .dropLast(1) // last one
         .map { NodeList(it.split(Regex("\\s+"))) }
-}
 
 @ExperimentalTime
 fun List<NodeList>.print(head: Int = size) {
