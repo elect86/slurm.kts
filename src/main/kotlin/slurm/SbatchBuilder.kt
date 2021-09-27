@@ -41,7 +41,11 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
 
     /** Charge resources used by this job to specified account. The account is an arbitrary string. The account name may
      *  be changed after job submission using the scontrol command.     */
-    var account: String by sbatch::account
+    var account: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.account = value
+        }
 
     /** Define the job accounting and profiling sampling intervals. This can be used to override the
      *  JobAcctGatherFrequency parameter in Slurm's configuration file, slurm.conf. */
@@ -80,10 +84,12 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  If not specified, the scontrol show job will display 'ReqS:C:T=*:*:*'. This option applies to job allocations.
      *  NOTE: This option is mutually exclusive with --hint, --threads-per-core and --ntasks-per-core.
      *  NOTE: This option may implicitly set the number of tasks (if -n was not specified) as one task per requested thread. */
-    fun extraNodeInfo(socketsCoresThreads: String) {
-        mutuallyExclusive0(MutuallyExclusive0.extraNodeInfo)
-        sbatch.extraNodeInfo = socketsCoresThreads
-    }
+    var extraNodeInfo: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            mutuallyExclusive0(MutuallyExclusive0.extraNodeInfo)
+            sbatch.extraNodeInfo = value
+        }
 
     /** Nodes can have features assigned to them by the Slurm administrator. Users can specify which of these features
      *  are required by their batch script using this options. For example a job's allocation may include both Intel
@@ -94,18 +100,30 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  The `::batch` argument must be a subset of the job's `::constraint` argument (i.e. the job can not request only
      *  KNL nodes, but require the script to execute on a Haswell node). If the request can not be satisfied from the
      *  resources allocated to the job, the batch script will execute on the first node of the job allocation. */
-    var batch: String by sbatch::batch
+    var batch: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.batch = value
+        }
 
     /** Burst buffer specification. The form of the specification is system dependent. Also see `::bbf`. When the `::bb`
      *  option is used, Slurm parses this option and creates a temporary burst buffer script file that is used
      *  internally by the burst buffer plugins. See Slurm's burst buffer guide for more information and examples:
      *  https://slurm.schedmd.com/burst_buffer.html     */
-    var bb: String by sbatch::bb
+    var bb: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.bb = value
+        }
 
     /** Path of file containing burst buffer specification. The form of the specification is system dependent.
      *  These burst buffer directives will be inserted into the submitted batch script. See Slurm's burst buffer guide
      *  for more information and examples: https://slurm.schedmd.com/burst_buffer.html */
-    var bbf: String by sbatch::bbf
+    var bbf: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.bbf = value
+        }
 
     /** Submit the batch script to the Slurm controller immediately, like normal, but tell the controller to defer the
      *  allocation of the job until the specified time.
@@ -125,15 +143,27 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     - If no time (HH:MM:SS) is specified, the default is (00:00:00).
     - If a date is specified without a year (e.g., MM/DD) then the current year is assumed, unless the combination of MM/DD and HH:MM:SS has already passed for that year, in which case the next year is used.
      *  */
-    var begin: LocalDateTime by sbatch::begin
+    var begin: LocalDateTime
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.begin = value
+        }
 
     /** Specifies features that a federated cluster must have to have a sibling job submitted to it. Slurm will attempt
      *  to submit a sibling job to a cluster if it has at least one of the specified features. If the "!" option is
      *  included, Slurm will attempt to submit a sibling job to a cluster that has none of the specified features. */
-    var clusterConstraint: String by sbatch::clusterConstraint
+    var clusterConstraint: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.clusterConstraint = value
+        }
 
     /**  An arbitrary comment enclosed in double quotes if using spaces or some special characters. */
-    var comment: String by sbatch::comment
+    var comment: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.comment = value
+        }
 
     /** Nodes can have features assigned to them by the Slurm administrator. Users can specify which of these features
      *  are required by their job using the constraint option. Only nodes having features matching the job constraints
@@ -174,38 +204,63 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *      `constraint="[(knl&snc4&flat)*4&haswell*1]"` might be used to specify that four nodes with the features
      *      `knl`, `snc4` and `flat` plus one node with the feature `haswell` are required. All options within
      *      parenthesis should be grouped with AND (e.g. "&") operands. */
-    var constraint: String by sbatch::constraint
+    var constraint: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.constraint = value
+        }
 
     /**  Path to OCI container bundle. */
-    var container: File? by sbatch::container
+    var container: File
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.container = value
+        }
 
     /** If set, then the allocated nodes must form a contiguous set.
      *  NOTE: If SelectPlugin=cons_res this option won't be honored with the topology/tree or topology/3d_torus plugins,
      *  both of which can modify the node ordering. */
-    var contiguous: Boolean by sbatch::contiguous
+    var contiguous: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.contiguous = value
+        }
 
     /** Restrict node selection to nodes with at least the specified number of cores per socket. See additional
      *  information under -B option above when task/affinity plugin is enabled.
      *  NOTE: This option may implicitly set the number of tasks (if -n was not specified) as one task per requested
      *  thread. */
-    var coresPerSocket: Int by sbatch::coresPerSocket
+    var coresPerSocket: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.coresPerSocket = value
+        }
 
     // TODO check docs p1, p2 and p3
     /** Request that job steps initiated by srun commands inside this sbatch script be run at some requested frequency
      *  if possible, on the CPUs selected for the step on the compute node(s). */
-    fun cpuFreq(freq: kHz) {
-        sbatch.cpuFreq = freq.toString()
-    }
+    var cpuFreq: kHz
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.cpuFreq = value.toString()
+        }
 
     /** Request that job steps initiated by srun commands inside this sbatch script be run at some requested frequency
      *  if possible, on the CPUs selected for the step on the compute node(s). */
-    fun cpuFreq(policy: FrequencyPolicy) {
-        sbatch.cpuFreq = policy.toString()
-    }
+
+    var cpuFreq_: FrequencyPolicy
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.cpuFreq = value.toString()
+        }
 
     /** Advise Slurm that ensuing job steps will require ncpus processors per allocated GPU. Not compatible with the
      *  `cpusPerTask` option. */
-    var cpuPerGput: Int by sbatch::cpusPerGpu
+    var cpuPerGput: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.cpusPerGpu = value
+        }
 
     /** Advise the Slurm controller that ensuing job steps will require ncpus number of processors per task. Without
      *  this option, the controller will just try to allocate one processor per task.
@@ -213,18 +268,30 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  of quad-processors nodes and we simply ask for 12 processors, the controller might give us only 3 nodes.
      *  However, by using the `cpusPerTask=3` options, the controller knows that each task requires 3 processors on the
      *  same node, and the controller will grant an allocation of 4 nodes, one for each of the 4 tasks. */
-    var cpuPerTask: Int? by sbatch::cpusPerTask
+    var cpuPerTask: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.cpusPerTask = value
+        }
 
     /** Remove the job if no ending is possible before this deadline (start > (deadline - time[-min])).
      *  Default is no deadline */
-    var deadline: LocalDateTime by sbatch::deadline
+    var deadline: LocalDateTime
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.deadline = value
+        }
 
     /** Do not reboot nodes in order to satisfied this job's feature specification if the job has been eligible to run
      *  for less than this time period. If the job has waited for less than the specified period, it will use only nodes
      *  which already have the specified features. The argument is in units of minutes. A default value may be set by a
      *  system administrator using the delay_boot option of the SchedulerParameters configuration parameter in the
      *  slurm.conf file, otherwise the default value is zero (no delay). */
-    var delayBoot: Minute? by sbatch::delayBoot
+    var delayBoot: Minute
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.delayBoot = value
+        }
 
     /** Defer the start of this job until the specified dependencies have been satisfied completed.
      *  TODO ? Any dependency may be satisfied if the "?" separator is used.
@@ -236,14 +303,22 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
 
     /** Set the working directory of the batch script to directory before it is executed. The path can be specified as
      *  full path or relative path to the directory where the command is executed. */
-    var chdir: File? by sbatch::chDir
+    var chdir: File
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.chDir = value
+        }
 
     /** Instruct Slurm to connect the batch script's standard error directly to the file name specified in the
      *  "filename pattern". By default both standard output and standard error are directed to the same file. For job
      *  arrays, the default file name is "slurm-%A_%a.out", "%A" is replaced by the job ID and "%a" with the array index.
      *  For other jobs, the default file name is "slurm-%j.out", where the "%j" is replaced by the job ID. See the
      *  filename pattern section below for filename specification options. */
-    var error: File? by sbatch::error
+    var error: File
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.error = value
+        }
 
     /** The job allocation can not share nodes with other running jobs (or just other users with the "=user" option or
      *  with the "=mcs" option). The default shared/exclusive behavior depends on system configuration and the
@@ -280,25 +355,31 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *      then the job's environment will inherit the variable from the caller's environment. If the caller doesn't
      *      have an environment variable defined for EDITOR, then the job's environment will use the value given by
      *      `::export`. */
-    fun export(export: String) {
-        sbatch.export += export
-    }
+    var export: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.export += value
+        }
 
     /** If a number between 3 and OPEN_MAX is specified as the argument to this option, a readable file descriptor will
      *  be assumed (STDIN and STDOUT are not supported as valid arguments). Otherwise a filename is assumed. Export
      *  environment variables defined in <filename> or read from <fd> to the job's execution environment. The content is
      *  one or more environment variable definitions of the form NAME=value, each separated by a null character. This
      *  allows the use of special characters in environment definitions. */
-    fun exportFile(file: String) {
-        sbatch.exportFile = file
-    }
+    var exportFile: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.exportFile = value
+        }
 
     /** Much like `::nodelist`, but the list is contained in a file of name node file. The node names of the list may
      *  also span multiple lines in the file. Duplicate node names in the file will be ignored. The order of the node
      *  names in the list is not important; the node names will be sorted by Slurm. */
-    fun nodeFile(file: File?) {
-        sbatch.nodeFile = file
-    }
+    var nodeFile: File
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nodeFile = value
+        }
 
     /** This option will tell sbatch to retrieve the login environment variables for the user specified in the --uid
      *  option. The environment variables are retrieved by running something of this sort
@@ -316,9 +397,11 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
 
     /** If sbatch is run as root, and the --gid option is used, submit the job with group's group access permissions.
      *  `group` may be the group name or the numerical group ID. */
-    fun groupID(groupID: String) {
-        sbatch.groupID = groupID
-    }
+    var groupID: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.groupID = value
+        }
 
     /** Specify the total number of GPUs required for the job. An optional GPU type specification can be supplied.
      *  For example `gpus("volta:3")`. Multiple options can be requested in a comma separated list, for example:
@@ -334,9 +417,10 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     inner class GpuBindBuilder {
         /** Bind each task to the GPU(s) which are closest. In a NUMA environment, each task may be bound to more than
          *  one GPU (i.e. all GPUs in that NUMA environment). */
-        fun closest() {
-            sbatch.gpuBind = "closest"
-        }
+        val closest: Unit
+            get() {
+                sbatch.gpuBind = "closest"
+            }
 
         /** Bind by setting GPU masks on tasks (or ranks) as specified where <list> is
          *  <gpu_id_for_task_0>,<gpu_id_for_task_1>,... GPU IDs are interpreted as decimal values unless they are
@@ -374,29 +458,35 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     inner class GpuFreqBuilder {
 
         /** a numeric value in megahertz (MHz) */
-        fun freq(mhz: MHz) {
-            sbatch.gpuFreq += mhz.value.toString()
-        }
+        var freq: MHz
+            @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+            set(value) {
+                sbatch.gpuFreq += value.value.toString()
+            }
 
         /** the lowest available frequency. */
-        fun low() {
-            sbatch.gpuFreq += "low"
-        }
+        val low: Unit
+            get() {
+                sbatch.gpuFreq += "low"
+            }
 
         /** attempts to set a frequency in the middle of the available range. */
-        fun medium() {
-            sbatch.gpuFreq += "medium"
-        }
+        val medium: Unit
+            get() {
+                sbatch.gpuFreq += "medium"
+            }
 
         /** the highest available frequency. */
-        fun high() {
-            sbatch.gpuFreq += "high"
-        }
+        val high: Unit
+            get() {
+                sbatch.gpuFreq += "high"
+            }
 
         /** (high minus one) will select the next highest available frequency. */
-        fun highm1() {
-            sbatch.gpuFreq += "highm1"
-        }
+        val highm1: Unit
+            get() {
+                sbatch.gpuFreq += "highm1"
+            }
     }
 
     /** Specify the number of GPUs required for the job on each node included in the job's resource allocation. An
@@ -438,38 +528,57 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     }
 
     /** Specify generic resource task binding options. */
-    var gresFlags: Sbatch.GresFlag? by sbatch::gresFlags
+    var gresFlags: Sbatch.GresFlag
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.gresFlags = value
+        }
 
     /** Specify the job is to be submitted in a held state (priority of zero). A held job can now be released using
      *  scontrol to reset its priority (e.g. "scontrol release <job_id>"). */
-    fun hold() {
-        sbatch.hold = true
-    }
+    val hold: Unit
+        get() {
+            sbatch.hold = true
+        }
 
     /** Display help information and exit. */
-    fun help() {
-        sbatch.help = true
-    }
+    val help: Unit
+        get() {
+            sbatch.help = true
+        }
 
     /** Bind tasks according to application hints. */
-    var hint: Sbatch.Hint? by sbatch::hint
+    var hint: Sbatch.Hint
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.hint = value
+        }
 
     /** Ignore any "#PBS" options specified in the batch script. */
-    fun ignorePBS() {
-        sbatch.ignorePBS = true
-    }
+    val ignorePBS: Unit
+        get() {
+            sbatch.ignorePBS = true
+        }
 
     /** Instruct Slurm to connect the batch script's standard input directly to the file name specified in the
      *  "filename pattern".
      *  By default, "/dev/null" is open on the batch script's standard input and both standard output and standard error
      *  are directed to a file of the name "slurm-%j.out", where the "%j" is replaced with the job allocation number, as
      *  described below in the filename pattern section. */
-    var input: String by sbatch::input
+    var input: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.input = value
+        }
 
     /** Specify a name for the job allocation. The specified name will appear along with the job id number when querying
      *  running jobs on the system. The default is the name of the batch script, or just "sbatch" if the script is read
      *  on sbatch's standard input. */
-    var jobName: String by sbatch::jobName
+    var jobName: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.jobName = value
+        }
 
     /** Do not automatically terminate a job if one of the nodes it has been allocated fails. The user will assume the
      *  responsibilities for fault-tolerance should a node fail. When there is a node failure, any active job steps
@@ -486,9 +595,11 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  A terminated job state will be JOB_CANCELLED. If this option is not specified the system wide behavior applies.
      *  By default the job stays pending with reason DependencyNeverSatisfied or if the kill_invalid_depend is specified
      *  in slurm.conf the job is terminated. */
-    fun killOnInvalidDep(boolean: Boolean) {
-        sbatch.killOnInvalidDep = boolean.toString()
-    }
+    var killOnInvalidDep: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.killOnInvalidDep = value.toString()
+        }
 
     /** Specification of licenses (or other resources available on all nodes of the cluster) which must be allocated to
      *  this job. License names can be followed by a colon and count (the default count is one). Multiple license names
@@ -532,9 +643,11 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     //    The cyclic distribution method will distribute tasks to sockets such that consecutive tasks are distributed over consecutive sockets (in a round-robin fashion). Tasks requiring more than one CPU will have all of those CPUs allocated on a single socket if possible.
     //    fcyclic
     //    The fcyclic distribution method will distribute tasks to sockets such that consecutive tasks are distributed over consecutive sockets (in a round-robin fashion). Tasks requiring more than one CPU will have each CPUs allocated in a cyclic fashion across sockets.
-    fun distribution(distribution: String) {
-        sbatch.distribution = distribution
-    }
+    var distribution: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.distribution = value
+        }
 
     /** Notify user by email when certain event types occur. Multiple type values may be specified in a comma separated
      *  list. The user to be notified is indicated with --mail-user. Unless the ARRAY_TASKS option is specified, mail
@@ -546,11 +659,19 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
 
     /** User to receive email notification of state changes as defined by --mail-type. The default value is the
      *  submitting user. */
-    var mailUser: String by sbatch::mailUser
+    var mailUser: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.mailUser = value
+        }
 
     /** Used only when the mcs/group plugin is enabled. This parameter is a group among the groups of the user. Default
      *  value is calculated by the Plugin mcs if it's enabled. */
-    var mcsLabel: String by sbatch::mcsLabel
+    var mcsLabel: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.mcsLabel = value
+        }
 
     /** Specify the real memory required per node. Default units are megabytes unless the SchedulerParameters
      *  configuration parameter includes the "default_gbytes" option for gigabytes. Different units can be specified
@@ -568,7 +689,11 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  samples memory use on a periodic basis (data need not be stored, just collected). In both cases memory use is
      *  based upon the job's Resident Set Size (RSS). A task may exceed the memory limit until the next periodic
      *  accounting sample. */
-    var mem: String by sbatch::mem
+    var mem: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.mem = value
+        }
 
     /** Minimum memory required per allocated CPU. Default units are megabytes unless the SchedulerParameters
      *  configuration parameter includes the "default_gbytes" option for gigabytes. Default value is DefMemPerCPU and
@@ -583,14 +708,22 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  The --mem, --mem-per-cpu and --mem-per-gpu options are mutually exclusive.
      *  NOTE:If the final amount of memory requested by job (eg.: when --mem-per-cpu use with --exclusive option) can't
      *  be satisfied by any of nodes configured in the partition, the job will be rejected. */
-    var memPerCpu: String by sbatch::memPerCpu
+    var memPerCpu: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.memPerCpu = value
+        }
 
     /** Minimum memory required per allocated GPU. Default units are megabytes unless the SchedulerParameters
      *  configuration parameter includes the "default_gbytes" option for gigabytes. Different units can be specified
      *  using the suffix [K|M|G|T]. Default value is DefMemPerGPU and is available on both a global and per partition
      *  basis. If configured, the parameters can be seen using the scontrol show config and scontrol show partition
      *  commands. Also see --mem. The --mem, --mem-per-cpu and --mem-per-gpu options are mutually exclusive. */
-    var memPerGpu: String by sbatch::memPerGpu
+    var memPerGpu: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.memPerGpu = value
+        }
 
     /** Bind tasks to memory. Used only when the task/affinity plugin is enabled and the NUMA memory functions are
      *  available. Note that the resolution of CPU and memory binding may differ on some architectures. For example, CPU
@@ -614,14 +747,16 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
 
     inner class MemBindBuilder {
         /** show this help message */
-        fun help() {
-            sbatch.memBind += "help"
-        }
+        val help: Unit
+            get() {
+                sbatch.memBind += "help"
+            }
 
         /** Use memory local to the processor in use */
-        fun local() {
-            sbatch.memBind += "local"
-        }
+        val local: Unit
+            get() {
+                sbatch.memBind += "local"
+            }
 
         /** Bind by setting memory masks on tasks (or ranks) as specified where <list> is <numa_id_for_task_0>,
          *  <numa_id_for_task_1>,... The mapping is specified for a node and identical mapping is applied to the tasks
@@ -649,38 +784,48 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
         }
 
         /** don't bind tasks to memory (default) */
-        fun none() {
-            sbatch.memBind += "no"
-        }
+        val none: Unit
+            get() {
+                sbatch.memBind += "no"
+            }
 
         /** Prefer use of first specified NUMA node, but permit use of other available NUMA nodes. */
-        fun prefer() {
-            sbatch.memBind += "p"
-        }
+        val prefer: Unit
+            get() {
+                sbatch.memBind += "p"
+            }
 
         /** quietly bind before task runs (default) */
-        fun quiet() {
-            sbatch.memBind += "q"
-        }
+        val quiet: Unit
+            get() {
+                sbatch.memBind += "q"
+            }
 
         /** bind by task rank (not recommended) */
-        fun rank() {
-            sbatch.memBind += "rank"
-        }
+        val rank: Unit
+            get() {
+                sbatch.memBind += "rank"
+            }
 
         /** sort free cache pages (run zonesort on Intel KNL nodes) */
-        fun sort() {
-            sbatch.memBind += "sort"
-        }
+        val sort: Unit
+            get() {
+                sbatch.memBind += "sort"
+            }
 
         /** verbosely report binding before task runs */
-        fun verbose() {
-            sbatch.memBind += "v"
-        }
+        val verbose: Unit
+            get() {
+                sbatch.memBind += "v"
+            }
     }
 
     /** Specify a minimum number of logical cpus/processors per node. */
-    var minCpus: Int by sbatch::minCpus
+    var minCpus: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.minCpus = value
+        }
 
     /** Request that a minimum of minnodes nodes be allocated to this job. A maximum node count may also be specified
      *  with maxnodes. If only one number is specified, this is used as both the minimum and maximum node count. The
@@ -693,9 +838,11 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  options. The job will be allocated as many nodes as possible within the range specified and without delaying the
      *  initiation of the job. The node count specification may include a numeric value followed by a suffix of "k"
      *  (multiplies numeric value by 1,024) or "m" (multiplies numeric value by 1,048,576). */
-    fun nodes(minNodes: Int) {
-        sbatch.nodes = minNodes..minNodes
-    }
+    var minNodes: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nodes = value..value
+        }
 
     /** Request that a minimum of minnodes nodes be allocated to this job. A maximum node count may also be specified
      *  with maxnodes. If only one number is specified, this is used as both the minimum and maximum node count. The
@@ -708,13 +855,21 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  options. The job will be allocated as many nodes as possible within the range specified and without delaying the
      *  initiation of the job. The node count specification may include a numeric value followed by a suffix of "k"
      *  (multiplies numeric value by 1,024) or "m" (multiplies numeric value by 1,048,576). */
-    var nodes: IntRange? by sbatch::nodes
+    var nodes: IntRange
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nodes = value
+        }
 
     /** sbatch does not launch tasks, it requests an allocation of resources and submits a batch script. This option
      *  advises the Slurm controller that job steps run within the allocation will launch a maximum of number tasks and
      *  to provide for sufficient resources. The default is one task per node, but note that the --cpus-per-task option
      *  will change this default. */
-    var nTasks: Int by sbatch::ntasks
+    var nTasks: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.ntasks = value
+        }
 
     /** Specify information pertaining to the switch or network. The interpretation of type is system dependent. This
      *  option is supported when running Slurm on a Cray natively. It is used to request using Network Performance
@@ -795,29 +950,40 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *          specifies that two connections are established for each protocol (LAPI and MPI) and each task. If there
      *          are two networks and four tasks on the node then a total of 32 connections are established (2 instances
      *          x 2 protocols x 2 networks x 4 tasks). */
-    var network: String by sbatch::network
+    var network: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.network = value
+        }
 
     /** Run the job with an adjusted scheduling priority within Slurm. With no adjustment value the scheduling priority
      *  is decreased by 100. A negative nice value increases the priority, otherwise decreases it. The adjustment range
      *  is +/- 2147483645. Only privileged users can specify a negative adjustment. */
-    fun nice(adjustament: Int) {
-        sbatch.nice = adjustament.toString()
-    }
+    var nice: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nice = value.toString()
+        }
 
     /** Specifies that the batch job should never be requeued under any circumstances. Setting this option will prevent
      *  system administrators from being able to restart the job (for example, after a scheduled downtime), recover from
      *  a node failure, or be requeued upon preemption by a higher priority job. When a job is requeued, the batch
      *  script is initiated from its beginning. Also see the --requeue option. The JobRequeue configuration parameter
      *  controls the default behavior on the cluster. */
-    fun noRequeue() {
-        sbatch.noRequeue = true
-    }
+    val noRequeue: Unit
+        get() {
+            sbatch.noRequeue = true
+        }
 
     /** Request the maximum ntasks be invoked on each core. Meant to be used with the --ntasks option. Related to
      *  --ntasks-per-node except at the core level instead of the node level. NOTE: This option is not supported unless
      *  SelectType=cons_res is configured (either directly or indirectly on Cray systems) along with the node's core
      *  count. */
-    var nTasksPerCore: Int by sbatch::nTasksPerCore
+    var nTasksPerCore: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nTasksPerCore = value
+        }
 
     /** Request that ntasks be invoked on each node. If used with the --ntasks option, the --ntasks option will take
      *  precedence and the --ntasks-per-node will be treated as a maximum count of tasks per node. Meant to be used with
@@ -827,13 +993,21 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  where only one MPI "task/rank" should be assigned to each node while allowing the OpenMP portion to utilize all
      *  of the parallelism present in the node, or submitting a single setup/cleanup/monitoring job to each node of a
      *  pre-existing allocation as one step in a larger job script. */
-    var nTasksPerNode: Int by sbatch::nTasksPerNode
+    var nTasksPerNode: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nTasksPerNode = value
+        }
 
     /** Request the maximum ntasks be invoked on each socket. Meant to be used with the --ntasks option. Related to
      *  --ntasks-per-node except at the socket level instead of the node level. NOTE: This option is not supported
      *  unless SelectType=cons_res is configured (either directly or indirectly on Cray systems) along with the node's
      *  socket count. */
-    var nTasksPerSocket: Int by sbatch::nTasksPerSocket
+    var nTasksPerSocket: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.nTasksPerSocket = value
+        }
 
     /** Overcommit resources. When applied to job allocation, only one CPU is allocated to the job per node and options
      *  used to specify the number of tasks per node, socket, core, etc. are ignored. When applied to job step
@@ -842,24 +1016,37 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  --overcommit you are explicitly allowing more than one process per CPU. However no more than MAX_TASKS_PER_NODE
      *  tasks are permitted to execute per node. NOTE: MAX_TASKS_PER_NODE is defined in the file slurm.h and is not a
      *  variable, it is set at Slurm build time. */
-    fun overcommit() {
-        sbatch.overcommit = true
-    }
+    val overcommit: Unit
+        get() {
+            sbatch.overcommit = true
+        }
 
     /** Instruct Slurm to connect the batch script's standard output directly to the file name specified in the
      *  "filename pattern". By default both standard output and standard error are directed to the same file. For job
      *  arrays, the default file name is "slurm-%A_%a.out", "%A" is replaced by the job ID and "%a" with the array
      *  index. For other jobs, the default file name is "slurm-%j.out", where the "%j" is replaced by the job ID. See
      *  the filename pattern section below for filename specification options. */
-    var output: String by sbatch::output
+    var output: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.output = value
+        }
 
     /** Open the output and error files using append or truncate mode as specified. The default value is specified by
      *  the system configuration parameter JobFileAppend. */
-    var openMode: Sbatch.OpenMode? by sbatch::openMode
+    var openMode: Sbatch.OpenMode
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.openMode = value
+        }
 
     /** Outputs only the job id number and the cluster name if present. The values are separated by a semicolon. Errors
      *  will still be displayed. */
-    var parsable: Boolean by sbatch::parsable
+    var parsable: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.parsable = value
+        }
 
     /** Request a specific partition for the resource allocation. If not specified, the default behavior is to allow the
      *  slurm controller to select the default partition as designated by the system administrator. If the job can use
@@ -874,14 +1061,20 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     /** Comma separated list of power management plugin options. Currently available flags include: level (all nodes
      *  allocated to the job should have identical power caps, may be disabled by the Slurm configuration option
      *  PowerParameters=job_no_level). */
-    fun power(flags: String) {
-        sbatch.power += flags
-    }
+    var power: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.power += value
+        }
 
     /** Request a specific job priority. May be subject to configuration specific constraints. value should either be a
      *  numeric value or "TOP" (for highest possible value). Only Slurm operators and administrators can set the
      *  priority of a job. */
-    var priority: String by sbatch::priority
+    var priority: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.priority = value
+        }
 
     /** enables detailed data collection by the acct_gather_profile plugin. Detailed data are typically time-series that
      *  are stored in an HDF5 file for the job or an InfluxDB database depending on the configured plugin. */
@@ -898,23 +1091,43 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
     /** Request a quality of service for the job. QOS values can be defined for each user/cluster/account association in
      *  the Slurm database. Users will be limited to their association's defined set of qos's when the Slurm
      *  configuration parameter, AccountingStorageEnforce, includes "qos" in it's definition. */
-    var qos: String by sbatch::qos
+    var qos: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.qos = value
+        }
 
     /** Suppress informational messages from sbatch such as Job ID. Only errors will still be displayed. */
-    var quite: Boolean by sbatch::quiet
+    var quite: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.quiet = value
+        }
 
     /** Force the allocated nodes to reboot before starting the job. This is only supported with some system
      *  configurations and will otherwise be silently ignored. */
-    var reboot: Boolean by sbatch::reboot
+    var reboot: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.reboot = value
+        }
 
     /** Specifies that the batch job should eligible to being requeue. The job may be requeued explicitly by a system
      *  administrator, after node failure, or upon preemption by a higher priority job. When a job is requeued, the
      *  batch script is initiated from its beginning. Also see the --no-requeue option. The JobRequeue configuration
      *  parameter controls the default behavior on the cluster. */
-    var requeue: Boolean by sbatch::requeue
+    var requeue: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.requeue = value
+        }
 
     /** Allocate resources for the job from the named reservation. */
-    var reservation: String by sbatch::reservation
+    var reservation: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.reservation = value
+        }
 
     /** The job allocation can over-subscribe resources with other running jobs. The resources to be over-subscribed can
      *  be nodes, sockets, cores, and/or hyperthreads depending upon configuration. The default over-subscribe behavior
@@ -922,14 +1135,22 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  This option may result in the allocation being granted sooner than if the --oversubscribe option was not set and
      *  allow higher system utilization, but application performance will likely suffer due to competition for resources.
      *  Also see the --exclusive option. */
-    var oversubscribe: Boolean by sbatch::oversubscribe
+    var oversubscribe: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.oversubscribe = value
+        }
 
     /** Count of specialized cores per node reserved by the job for system operations and not used by the application.
      *  The application will not use these cores, but will be charged for their allocation. Default value is dependent
      *  upon the node's configured CoreSpecCount value. If a value of zero is designated and the Slurm configuration
      *  option AllowSpecResourcesUsage is enabled, the job will be allowed to override CoreSpecCount and use the
      *  specialized resources on nodes it is allocated. This option can not be used with the --thread-spec option. */
-    var coreSpec: Int by sbatch::coreSpec
+    var coreSpec: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.coreSpec = value
+        }
 
     /** When a job is within sig_time seconds of its end time, send it the signal sig_num. Due to the resolution of
      *  event handling by Slurm, the signal may be sent up to 60 seconds earlier than specified. sig_num may either be a
@@ -938,15 +1159,27 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  will be 60 seconds. Use the "B:" option to signal only the batch shell, none of the other processes will be
      *  signaled. By default all job steps will be signaled, but not the batch shell itself. To have the signal sent at
      *  preemption time see the preempt_send_user_signal SlurmctldParameter. */
-    var signal: String by sbatch::signal
+    var signal: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.signal = value
+        }
 
     /** Restrict node selection to nodes with at least the specified number of sockets. See additional information under
      * -B option above when task/affinity plugin is enabled. */
-    var socketsPerNode: Int by sbatch::socketsPerNode
+    var socketsPerNode: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.socketsPerNode = value
+        }
 
     /** Spread the job allocation over as many nodes as possible and attempt to evenly distribute tasks across the
      *  allocated nodes. This option disables the topology/tree plugin. */
-    var spreadJob: Boolean by sbatch::spreadJob
+    var spreadJob: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.spreadJob = value
+        }
 
     /** When a tree topology is used, this defines the maximum count of switches desired for the job allocation and
      *  optionally the maximum time to wait for that number of switches. If Slurm finds an allocation containing more
@@ -958,21 +1191,37 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  On a dragonfly network the only switch count supported is 1 since communication performance will be highest when
      *  a job is allocate resources on one leaf switch or more than 2 leaf switches. The default max-time is the
      *  max_switch_wait SchedulerParameters. */
-    var time: Duration by sbatch::time
+    var time: Duration
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.time = value
+        }
 
     /** Validate the batch script and return an estimate of when a job would be scheduled to run given the current job
      *  queue and all the other arguments specifying the job requirements. No job is actually submitted. */
-    var testOnly: Boolean by sbatch::testOnly
+    var testOnly: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.testOnly = value
+        }
 
     /** Count of specialized threads per node reserved by the job for system operations and not used by the application.
      *  The application will not use these threads, but will be charged for their allocation. This option can not be
      *  used with the --core-spec option. */
-    var threadSpec: Int by sbatch::threadSpec
+    var threadSpec: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.threadSpec = value
+        }
 
     /** Restrict node selection to nodes with at least the specified number of threads per core. NOTE: "Threads" refers
      *  to the number of processing units on each core rather than the number of application tasks to be launched per
      *  core. See additional information under -B option above when task/affinity plugin is enabled. */
-    var threadsPerCore: Int by sbatch::threadsPerCore
+    var threadsPerCore: Int
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.threadsPerCore = value
+        }
 
     /** Set a minimum time limit on the job allocation. If specified, the job may have it's --time limit lowered to a
      *  value no lower than --time-min if doing so permits the job to begin execution earlier than otherwise possible.
@@ -980,39 +1229,55 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  scheduling algorithm to allocate resources otherwise reserved for higher priority jobs. Acceptable time formats
      *  include "minutes", "minutes:seconds", "hours:minutes:seconds", "days-hours", "days-hours:minutes" and
      *  "days-hours:minutes:seconds". */
-    var timeMin: Duration by sbatch::timeMin
+    var timeMin: Duration
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.timeMin = value
+        }
 
     /** Specify a minimum amount of temporary disk space per node. Default units are megabytes unless the
      *  SchedulerParameters configuration parameter includes the "default_gbytes" option for gigabytes. Different units
      *  can be specified using the suffix [K|M|G|T]. */
-    var tmp: String by sbatch::tmp
+    var tmp: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.tmp = value
+        }
 
     /** Display brief help message and exit. */
-    fun usage() {
-        sbatch.usage = true
-    }
+    val usage: Unit
+        get() {
+            sbatch.usage = true
+        }
 
     /** Attempt to submit and/or run a job as user instead of the invoking user id. The invoking user's credentials will
      *  be used to check access permissions for the target partition. User root may use this option to run jobs as a
      *  normal user in a RootOnly partition for example. If run as root, sbatch will drop its permissions to the uid
      *  specified after node allocation is successful. user may be the user name or numerical user ID. */
-    val uid: String by sbatch::uid
+    var uid: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.uid = value
+        }
 
     /** If a range of node counts is given, prefer the smaller count. */
-    fun useMinNodes() {
-        sbatch.useMinNodes = true
-    }
+    val useMinNodes: Unit
+        get() {
+            sbatch.useMinNodes = true
+        }
 
     /** Display version information and exit. */
-    fun version() {
-        sbatch.version
-    }
+    val version: Unit
+        get() {
+            sbatch.version
+        }
 
     /** Increase the verbosity of sbatch's informational messages. Multiple -v's will further increase sbatch's
      *  verbosity. By default only errors will be displayed. */
-    fun verbose() {
-        sbatch.verbose
-    }
+    val verbose: Unit
+        get() {
+            sbatch.verbose
+        }
 
     /** Request a specific list of hosts. The job will contain all of these hosts and possibly additional hosts as
      *  needed to satisfy resource requirements. The list may be specified as a comma-separated list of hosts, a range
@@ -1029,9 +1294,10 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *  code of the submitted job. If the job terminated due to a signal rather than a normal exit, the exit code will
      *  be set to 1. In the case of a job array, the exit code recorded will be the highest value for any task in the
      *  job array. */
-    fun wait_() {
-        sbatch.wait = true
-    }
+    val wait: Unit
+        get() {
+            sbatch.wait = true
+        }
 
     /** Controls when the execution of the command begins. By default the job will begin execution as soon as the
      *  allocation is made.
@@ -1040,17 +1306,27 @@ class SbatchBuilder(val sbatch: Sbatch = Sbatch()) {
      *          (i.e. booted).
      *      true
      *          Do not begin execution until all nodes are ready for use. */
-    fun waitAllNodes(value: Boolean) {
+    var waitAllNodes: Boolean
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
         sbatch.waitAllNodes = value
     }
 
     /** Specify wckey to be used with job. If TrackWCKey=no (default) in the slurm.conf this value is ignored. */
-    var wcKey: String by sbatch::wckey
+    var wcKey: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.wckey = value
+        }
 
     /** Sbatch will wrap the specified command string in a simple "sh" shell script, and submit that script to the slurm
      *  controller. When --wrap is used, a script name and arguments may not be specified on the command line; instead
      *  the sbatch-generated wrapper script is used. */
-    var wrap: String by sbatch::wrap
+    var wrap: String
+        @Deprecated(message = "Write only property", level = DeprecationLevel.HIDDEN) get() = error("")
+        set(value) {
+            sbatch.wrap = value
+        }
 
     /** Explicitly exclude certain nodes from the resources granted to the job. */
     fun exclude(vararg nodes: String) {
