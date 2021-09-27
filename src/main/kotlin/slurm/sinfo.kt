@@ -241,9 +241,10 @@ class SinfoBuilder(val sinfo: Sinfo = Sinfo()) {
 
     /** Display information about all partitions. This causes information to be displayed about partitions that are
      *  configured as hidden and partitions that are unavailable to the user's group. */
-    fun all() {
-        sinfo.all = true
-    }
+    val all: Unit
+        get() {
+            sinfo.all = true
+        }
 
     /** If set, only report state information for non-responding (dead) nodes. */
     fun dead() {
@@ -529,9 +530,10 @@ class SinfoBuilder(val sinfo: Sinfo = Sinfo()) {
     }
 
     /** Print version information and exit. */
-    fun version() {
-        sinfo.version = true
-    }
+    val version: Unit
+        get() {
+            sinfo.version = true
+        }
 }
 
 enum class State {
